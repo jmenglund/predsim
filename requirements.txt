@@ -1,0 +1,7 @@
+pandas>=0.16
+pytest>=2.8
+codecov
+pep8
+pytest-cov
+pytest-pep8
+DendroPy>=4.0

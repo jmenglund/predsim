@@ -227,7 +227,7 @@ def parse_args(args):
     parser.add_argument(
         '-p', '--seqgen-path',
         type=str, default='seq-gen',
-        dest='seqgen_path', metavar='PATH',
+        dest='seqgen_path', metavar='FILE',
         help='path to a Seq-Gen executable (default: "seq-gen")')
     parser.add_argument(
         'pfile', type=argparse.FileType('rU'),

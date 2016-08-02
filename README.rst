@@ -82,7 +82,7 @@ Usage
                             path to output file with used Seq-Gen commands
       -s INT, --skip INT    number of records (trees) to skip at the beginning of
                             the sample (default: 0)
-      -p PATH, --seqgen-path PATH
+      -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
 
 

@@ -11,6 +11,11 @@ branches:
     only:
         - master
 
+addons:
+  apt:
+    packages:
+    - seq-gen
+
 script:
     py.test --cov=pandascharm.py --pep8
 

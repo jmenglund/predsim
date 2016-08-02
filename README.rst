@@ -78,7 +78,7 @@ Usage
       -l INT, --length INT  sequence lenght (default: 1000)
       -g INT, --gamma-cats INT
                             number of gamma rate categories (default: continuous)
-      -c PATH, --commands-file PATH
+      -c FILE, --commands-file FILE
                             path to output file with used Seq-Gen commands
       -s INT, --skip INT    number of records (trees) to skip at the beginning of
                             the sample (default: 0)

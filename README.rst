@@ -93,6 +93,19 @@ License
 `MIT license <https://opensource.org/licenses/MIT>`_.
 
 
+Citing
+------
+
+If you use results produced with this package in a scientific 
+publication, please just mention the package name in the text and 
+cite the Zenodo DOI of this project:
+
+[A Zenodo DOI will be inserted here]
+
+You can select a citation style from the dropdown menu in the 
+*"Cite as"* section on the Zenodo page.
+
+
 Author
 ------
 

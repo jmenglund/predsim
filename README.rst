@@ -24,7 +24,7 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
 Requirements
 ------------
 
-`SeqGen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ must be installed on
+`Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ must be installed on
 your system.
 
 
@@ -65,7 +65,7 @@ Usage
                        pfile tfile [outfile]
     
     A command-line utility that reads posterior output of MrBayes and simulates
-    predictive datasets with SeqGen.
+    predictive datasets with Seq-Gen.
     
     positional arguments:
       pfile                 path to a MrBayes p-file
@@ -79,11 +79,11 @@ Usage
       -g INT, --gamma-cats INT
                             number of gamma rate categories (default: continuous)
       -c PATH, --commands-file PATH
-                            path to output file with used SeqGen commands
+                            path to output file with used Seq-Gen commands
       -s INT, --skip INT    number of records (trees) to skip at the beginning of
                             the sample (default: 0)
       -p PATH, --seqgen-path PATH
-                            path to a SeqGen executable (default: "seq-gen")
+                            path to a Seq-Gen executable (default: "seq-gen")
 
 
 License

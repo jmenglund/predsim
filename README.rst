@@ -58,7 +58,7 @@ Python path. See for example the environment management system
 Usage
 -----
 
-.. code-block:: bash
+.. code-block:: console
     
     $ predsim -h
     usage: predsim [-h] [-V] [-l INT] [-g INT] [-c PATH] [-s INT] [-p PATH]
@@ -74,7 +74,7 @@ Usage
     
     optional arguments:
       -h, --help            show this help message and exit
-      -V, --version         show program\'s version number and exit
+      -V, --version         show program's version number and exit
       -l INT, --length INT  sequence lenght (default: 1000)
       -g INT, --gamma-cats INT
                             number of gamma rate categories (default: continuous)

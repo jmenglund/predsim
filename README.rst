@@ -5,7 +5,7 @@ predsim
 
 ``predsim`` is a command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
-Datasets can be simulated under the GTR + G + I substitution model or any of
+Datasets can be simulated under the GTR+G+I substitution model or any of
 its nested variants available in MrBayes (JC69, HKY85 etc.).
 
 The script uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for 
@@ -74,7 +74,7 @@ Usage
     
     optional arguments:
       -h, --help            show this help message and exit
-      -V, --version         show program's version number and exit
+      -V, --version         show program\'s version number and exit
       -l INT, --length INT  sequence lenght (default: 1000)
       -g INT, --gamma-cats INT
                             number of gamma rate categories (default: continuous)

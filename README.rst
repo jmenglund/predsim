@@ -61,7 +61,7 @@ Usage
 .. code-block:: console
     
     $ predsim -h
-    usage: predsim [-h] [-V] [-l INT] [-g INT] [-c PATH] [-s INT] [-p PATH]
+    usage: predsim [-h] [-V] [-l INT] [-g INT] [-c FILE] [-s INT] [-p FILE]
                        pfile tfile [outfile]
     
     A command-line utility that reads posterior output of MrBayes and simulates

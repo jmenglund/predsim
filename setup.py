@@ -14,13 +14,11 @@ setup(
         'datasets from MrBayes\' output.'),
     long_description=open(
         join(dirname(__file__), 'README.rst'), encoding='utf-8').read(),
-    packages=find_packages(exclude=['docs', 'tests*']),
     py_modules=['predsim'],
+    install_requires=['dendropy>=4.0', 'pandas>=0.16'],
     entry_points={
         'console_scripts': [
-            'predsim = predsim.predsim:main',
-            'predsim.py = predsim.predsim:main']},
-    install_requires=['dendropy>=4.0', 'pandas>=0.16'],
+            'predsim = predsim:main']},
     author='Markus Englund',
     author_email='jan.markus.englund@gmail.com',
     url='https://github.com/jmenglund/predsim',

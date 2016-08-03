@@ -20,11 +20,11 @@ from predsim import (
     parse_args,
     main,)
 
+
 SEQGEN_PATH = 'seq-gen'
 
-
 seqgen_required = pytest.mark.skipif(
-    not os.path.isfile(SEQGEN_PATH), reason='Seq-Gen is required')
+    os.path.isfile(SEQGEN_PATH) is False, reason='Seq-Gen is required')
 
 
 class TestGetSkiprows():

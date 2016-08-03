@@ -12,7 +12,7 @@ branches:
         - master
 
 before_script:
-  - wget http://tree.bio.ed.ac.uk/download.php?id=85
+  - wget http://tree.bio.ed.ac.uk/download.php?id=85 -O Seq-Gen.v1.3.3.tgz
   - tar -xvfz Seq-Gen.v1.3.3.tgz
 
 script:

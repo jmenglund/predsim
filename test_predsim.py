@@ -3,6 +3,7 @@
 
 import pytest
 import tempfile
+import os.path
 
 import pandas
 import dendropy
@@ -19,8 +20,11 @@ from predsim import (
     parse_args,
     main,)
 
-
 SEQGEN_PATH = 'seq-gen'
+
+
+seqgen_required = pytest.mark.skipif(
+    os.path.isfile(SEQGEN_PATH), reason='Seq-Gen is required')
 
 
 class TestGetSkiprows():
@@ -70,6 +74,7 @@ class TestGetSeqGenParamaters():
             get_seqgen_params(self.d3)
 
 
+@seqgen_required
 class TestSingleSimulation():
 
     tree_string = '((t1:0,t2:0):0,t3:0,t4:0);'
@@ -100,6 +105,7 @@ class TestSingleSimulation():
         assert ' -a2 ' in command
 
 
+@seqgen_required
 class TestMultipleSimulations():
 
     treelist_string = '((t1:0,t2:0):0,t3:0,t4:0);((t1:0,t2:0):0,t3:0,t4:0);'
@@ -126,6 +132,7 @@ class TestMultipleSimulations():
                 SEQGEN_PATH, self.p_frame[:1], self.treelist[:2])
 
 
+@seqgen_required
 class TestArgumentParser():
 
     def test_parser_help(self):
@@ -141,6 +148,7 @@ class TestArgumentParser():
                         p_file.name, t_file.name])
 
 
+@seqgen_required
 class TestMain():
 
     def test_args_help(self):

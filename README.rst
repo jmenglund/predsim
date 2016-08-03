@@ -1,7 +1,7 @@
 predsim
 =======
 
-|License|
+|Build-Status| |License|
 
 ``predsim`` is a command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
@@ -111,6 +111,7 @@ Author
 
 Markus Englund, `orcid.org/0000-0003-1688-7112 <http://orcid.org/0000-0003-1688-7112>`_
 
-
+.. |Build-Status| image:: https://travis-ci.org/jmenglund/predsim.svg?branch=master
+   :target: https://travis-ci.org/jmenglund/predsim
 .. |License| image:: https://img.shields.io/badge/license-MIT-blue.svg
    :target: https://raw.githubusercontent.com/jmenglund/predsim/master/LICENSE.txt

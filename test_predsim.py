@@ -24,7 +24,7 @@ SEQGEN_PATH = 'seq-gen'
 
 
 seqgen_required = pytest.mark.skipif(
-    os.path.isfile(SEQGEN_PATH), reason='Seq-Gen is required')
+    not os.path.isfile(SEQGEN_PATH), reason='Seq-Gen is required')
 
 
 class TestGetSkiprows():

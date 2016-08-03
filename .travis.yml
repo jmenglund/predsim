@@ -13,7 +13,7 @@ branches:
 
 before_script:
   - wget http://tree.bio.ed.ac.uk/download.php?id=85
-  - tar -xvfz Seq-Gen.v1.3.3.tar
+  - tar -xvfz Seq-Gen.v1.3.3.tgz
 
 script:
     py.test --cov=pandascharm.py --pep8

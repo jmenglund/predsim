@@ -1,20 +1,19 @@
 language: python
 
 python:
-    - '2.7'
-    - '3.3'
+#    - '2.7'
+#    - '3.3'
     - '3.4'
-    - '3.5'
+#    - '3.5'
 
 # whitelist
 branches:
     only:
         - master
 
-addons:
-  apt:
-    packages:
-    - seq-gen
+before_script:
+  - wget http://tree.bio.ed.ac.uk/download.php?id=85
+  - tar Seq-Gen.v1.3.3.tar
 
 script:
     py.test --cov=pandascharm.py --pep8

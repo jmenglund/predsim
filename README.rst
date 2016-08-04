@@ -11,6 +11,8 @@ uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for
 simulating the DNA-sequences and builds on the third-party libraries 
 `DendroPy <http://dendropy.org>`_ and `pandas <http://pandas.pydata.org>`_.
 
+Tested with Python 2.7, 3.3, 3.4 and 3.5.
+
 Source repository: `<https://github.com/jmenglund/predsim>`_
 
 --------------------------------

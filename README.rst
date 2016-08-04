@@ -87,6 +87,18 @@ Usage
                             path to a Seq-Gen executable (default: "seq-gen")
 
 
+Running tests
+-------------
+
+Testing is done with ``pytest``. Here is an example on how to run the tests:
+
+.. code-block:: console
+
+    $ cd predsim
+    $ pip install pytest pytest-cov pytest-pep8
+    $ py.test -v --cov-report term-missing --cov predsim.py --pep8
+
+
 License
 -------
 

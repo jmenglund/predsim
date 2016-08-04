@@ -106,8 +106,7 @@ License
 `MIT license <https://opensource.org/licenses/MIT>`_.
 
 
-<!---
-Citing
+<!--- Citing
 ------
 
 If you use results produced with this package in a scientific 

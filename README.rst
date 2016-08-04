@@ -61,7 +61,7 @@ Usage
 
 .. code-block:: console
     
-    $ predsim -h
+    $ predsim --help
     usage: predsim [-h] [-V] [-l INT] [-g INT] [-c FILE] [-s INT] [-p FILE]
                        pfile tfile [outfile]
     

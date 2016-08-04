@@ -92,7 +92,7 @@ Running tests
 
 Testing is done with ``pytest``. Here is an example on how to run the tests:
 
-.. code-block:: bash
+.. code-block::
 
     $ cd predsim
     $ pip install pytest pytest-cov pytest-pep8

@@ -33,14 +33,14 @@ Installation
 For most users, the easiest way is probably to install the latest version 
 hosted on `PyPI <https://pypi.python.org/>`_:
 
-.. code-block:: bash
+.. code-block:: console
 
     $ pip install predsim
 
 The project is hosted at https://github.com/jmenglund/predsim and 
 can also be installed using git:
 
-.. code-block:: bash
+.. code-block:: console
 
     $ git clone https://github.com/jmenglund/predsim.git
     $ cd predsim

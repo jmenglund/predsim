@@ -7,6 +7,7 @@ Command-line tool for simulating predictive datasets from MrBayes' output.
 
 import argparse
 import math
+import shutil
 import sys
 
 import dendropy
@@ -129,7 +130,11 @@ def simulate_matrix(
         Simulated dataset and used Seq-Gen command.
     """
     s = dendropy.interop.seqgen.SeqGen()
-    s.seqgen_path = seqgen_path
+    try:
+        full_path = shutil.which(seqgen_path)  # Python 3.3 and higher
+        s.seqgen_path = full_path if full_path else seqgen_path
+    except AttributeError:
+        s.seqgen_path = seqgen_path
     s.char_model = 'GTR' if ('general_rates' in seqgen_params) else 'HKY'
     s.seq_len = seq_len
     try:

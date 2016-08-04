@@ -11,6 +11,8 @@ uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for
 simulating the DNA-sequences and builds on the third-party libraries 
 `DendroPy <http://dendropy.org>`_ and `pandas <http://pandas.pydata.org>`_.
 
+Tested with Python 2.7, 3.3, 3.4 and 3.5.
+
 Source repository: `<https://github.com/jmenglund/predsim>`_
 
 --------------------------------
@@ -33,14 +35,14 @@ Installation
 For most users, the easiest way is probably to install the latest version 
 hosted on `PyPI <https://pypi.python.org/>`_:
 
-.. code-block:: bash
+.. code-block::
 
     $ pip install predsim
 
 The project is hosted at https://github.com/jmenglund/predsim and 
 can also be installed using git:
 
-.. code-block:: bash
+.. code-block::
 
     $ git clone https://github.com/jmenglund/predsim.git
     $ cd predsim
@@ -57,9 +59,9 @@ Python path. See for example the environment management system
 Usage
 -----
 
-.. code-block:: console
+.. code-block::
     
-    $ predsim -h
+    $ predsim --help
     usage: predsim [-h] [-V] [-l INT] [-g INT] [-c FILE] [-s INT] [-p FILE]
                        pfile tfile [outfile]
     
@@ -85,25 +87,39 @@ Usage
                             path to a Seq-Gen executable (default: "seq-gen")
 
 
+Running tests
+-------------
+
+Testing is done with ``pytest``. Here is an example on how to run the tests:
+
+.. code-block::
+
+    $ cd predsim
+    $ pip install pytest pytest-cov pytest-pep8
+    $ py.test -v --cov-report term-missing --cov predsim.py --pep8
+
+
 License
 -------
 
 ``predsim`` is distributed under the 
 `MIT license <https://opensource.org/licenses/MIT>`_.
 
+.. ..
 
-Citing
-------
-
-If you use results produced with this package in a scientific 
-publication, please just mention the package name in the text and 
-cite the Zenodo DOI of this project:
-
-[A Zenodo DOI will be inserted here]
-
-You can select a citation style from the dropdown menu in the 
-*"Cite as"* section on the Zenodo page.
-
+    <!---
+    Citing
+    ------
+    
+    If you use results produced with this package in a scientific 
+    publication, please just mention the package name in the text and 
+    cite the Zenodo DOI of this project:
+    
+    [A Zenodo DOI will be inserted here]
+    
+    You can select a citation style from the dropdown menu in the 
+    *"Cite as"* section on the Zenodo page.
+    --->
 
 Author
 ------

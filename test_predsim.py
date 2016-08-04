@@ -28,17 +28,21 @@ SEQGEN_PATH = 'seq-gen'
 
 
 def seqgen_status(path):
-    """Return True if Seq-Gen executable is working, else return False."""
+    """
+    Return True if Seq-Gen executable is working,
+    otherwise return False.
+    """
     f = open(devnull, 'w')
     try:
-        code = subprocess.call(
+        subprocess.check_call(
             SEQGEN_PATH, stdout=f, stderr=subprocess.STDOUT)
-        if code == 0:
-            status = True
-        else:
-            status = False
+        status = True
+    except subprocess.CalledProcessError:
+        status = False
     except OSError:
         status = False
+    finally:
+        f.close()
     return status
 
 

@@ -2,11 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+import shutil
+import subprocess
 import tempfile
-import os.path
 
 import pandas
 import dendropy
+
+from os import devnull
 
 from pandas.util.testing import assert_dict_equal
 
@@ -23,8 +26,24 @@ from predsim import (
 
 SEQGEN_PATH = 'seq-gen'
 
+
+def seqgen_status(path):
+    """Return True if Seq-Gen executable is working, else return False."""
+    f = open(devnull, 'w')
+    try:
+        code = subprocess.call(
+            SEQGEN_PATH, stdout=f, stderr=subprocess.STDOUT)
+        if code == 0:
+            status = True
+        else:
+            status = False
+    except OSError:
+        status = False
+    return status
+
+
 seqgen_required = pytest.mark.skipif(
-    os.path.isfile(SEQGEN_PATH) is False, reason='Seq-Gen is required')
+    seqgen_status(SEQGEN_PATH) is False, reason='Seq-Gen is required')
 
 
 class TestGetSkiprows():

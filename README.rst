@@ -119,6 +119,22 @@ License
     
     You can select a citation style from the dropdown menu in the 
     *"Cite as"* section on the Zenodo page.
+    
+    ``predsim relies on other software that should also be cited. Here are 
+    suggested citations for ``Seq-Gen``, ``DendroPy`` and ``pandas``, 
+    respectively:
+    
+    Rambaut A., Grassly NC 1997. Seq-Gen: an application for the Monte 
+    Carlo simulation of DNA sequence evolution along phylogenetic trees. 
+    Comput. Appl. Biosci. 13:235–238.
+    
+    Sukumaran J, Holder MT. 2010. DendroPy: a Python library for phylo-
+    genetic computing. Bioinformatics 26:1569–1571.
+    
+    McKinney W. 2010. Data structures for statistical computing in python.
+    *In* Proceedings of the 9th Python in Science Conference 
+    (van der Walt S, Millman J, editors), pages 51–56.
+    
     --->
 
 Author

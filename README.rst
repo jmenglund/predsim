@@ -11,7 +11,7 @@ uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for
 simulating the DNA-sequences and builds on the third-party libraries 
 `DendroPy <http://dendropy.org>`_ and `pandas <http://pandas.pydata.org>`_.
 
-Tested with Python 2.7, 3.3, 3.4 and 3.5.
+The code has been tested with Python 2.7, 3.3, 3.4 and 3.5.
 
 Source repository: `<https://github.com/jmenglund/predsim>`_
 
@@ -86,8 +86,8 @@ Usage
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
 
-It is recommended that you use the ``-c`` option to check the commands run 
-by ``Seq-Gen``.
+It is strongly recommended that you use the ``-c`` option to check the 
+commands run by ``Seq-Gen``.
 
 Depending on your Python version, you might need to specify the full path to 
 your ``Seq-Gen`` executable with the ``-p`` option.
@@ -96,7 +96,8 @@ your ``Seq-Gen`` executable with the ``-p`` option.
 Running tests
 -------------
 
-Testing is done with ``pytest``. Here is an example on how to run the tests:
+Testing is carried out with `pytest <http://pytest.org>`_. Here is an 
+example on how to run the test suite and generating a coverage report:
 
 .. code-block::
 

@@ -86,11 +86,11 @@ Usage
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
 
-It is strongly recommended that you use the ``-c`` option to check the 
+It is strongly recommended that you use the ``-c FILE`` option to check the 
 commands run by Seq-Gen.
 
 Depending on your Python version, you might need to specify the full path to 
-your Seq-Gen executable with the ``-p`` option.
+your Seq-Gen executable with the ``-p FILE`` option.
 
 
 Running tests

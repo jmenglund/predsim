@@ -87,6 +87,11 @@ Usage
                             path to a Seq-Gen executable (default: "seq-gen")
 
 
+Depending on what version of Python you are using, you might need to 
+specify the full path to your ``Seq-Gen`` executable by using the 
+``-p`` option.
+
+
 Running tests
 -------------
 

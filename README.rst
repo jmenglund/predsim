@@ -129,7 +129,7 @@ You can select a citation style from the dropdown menu in the
 suggested citations for Seq-Gen, DendroPy and pandas, 
 respectively:
 
-* Rambaut A., Grassly NC 1997. Seq-Gen: an application for the Monte 
+* Rambaut A., Grassly NC. 1997. Seq-Gen: an application for the Monte 
   Carlo simulation of DNA sequence evolution along phylogenetic trees. 
   Comput. Appl. Biosci. 13:235–238.
 

@@ -86,8 +86,6 @@ Usage
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
 
-Usage notes
-~~~~~~~~~~~
 
 * It is strongly recommended that you use the ``-c FILE`` option to check the 
   commands run by Seq-Gen.

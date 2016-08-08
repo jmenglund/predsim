@@ -5,9 +5,9 @@ predsim
 
 ``predsim`` is a command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
-Datasets can be simulated under the GTR+G+I substitution model or any of
-its nested variants available in MrBayes (JC69, HKY85 etc.). The script 
-uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for 
+Datasets can be simulated under the GTR+G+I substitution model or any nested 
+variant available in MrBayes (JC69, HKY85 etc.). The script uses 
+`Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for 
 simulating the DNA-sequences and builds on the third-party libraries 
 `DendroPy <http://dendropy.org>`_ and `pandas <http://pandas.pydata.org>`_.
 

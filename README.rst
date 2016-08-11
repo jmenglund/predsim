@@ -1,13 +1,13 @@
 predsim
 =======
 
-|Build-Status| |License|
+|Build-Status| |PyPI-Status| |License| |DOI-URI|
 
 ``predsim`` is a command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
-Datasets can be simulated under the GTR+G+I substitution model or any of
-its nested variants available in MrBayes (JC69, HKY85 etc.). The script 
-uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for 
+Datasets can be simulated under the GTR+G+I substitution model or any nested 
+variant available in MrBayes (JC69, HKY85 etc.). The script uses 
+`Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for 
 simulating the DNA-sequences and builds on the third-party libraries 
 `DendroPy <http://dendropy.org>`_ and `pandas <http://pandas.pydata.org>`_.
 
@@ -86,11 +86,12 @@ Usage
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
 
-It is strongly recommended that you use the ``-c FILE`` option to check the 
-commands run by Seq-Gen.
 
-Depending on your Python version, you might need to specify the full path to 
-your Seq-Gen executable with the ``-p FILE`` option.
+* It is strongly recommended that you use the ``-c FILE`` option to check the 
+  commands run by Seq-Gen.
+
+* Depending on your Python version, you might need to specify the full path to 
+  your Seq-Gen executable with the ``-p FILE`` option.
 
 
 Running tests
@@ -112,37 +113,34 @@ License
 ``predsim`` is distributed under the 
 `MIT license <https://opensource.org/licenses/MIT>`_.
 
-.. ..
 
-    <!---
-    Citing
-    ------
-    
-    If you use results produced with this package in a scientific 
-    publication, please just mention the package name in the text and 
-    cite the Zenodo DOI of this project:
-    
-    [A Zenodo DOI will be inserted here]
-    
-    You can select a citation style from the dropdown menu in the 
-    *"Cite as"* section on the Zenodo page.
-    
-    ``predsim`` relies on other software that should also be cited. Here are 
-    suggested citations for Seq-Gen, DendroPy and pandas, 
-    respectively:
-    
-    > Rambaut A., Grassly NC 1997. Seq-Gen: an application for the Monte 
-    Carlo simulation of DNA sequence evolution along phylogenetic trees. 
-    Comput. Appl. Biosci. 13:235–238.
-    
-    > Sukumaran J, Holder MT. 2010. DendroPy: a Python library for phylo-
-    genetic computing. Bioinformatics 26:1569–1571.
-    
-    > McKinney W. 2010. Data structures for statistical computing in python.
-    *In* Proceedings of the 9th Python in Science Conference 
-    (van der Walt S, Millman J, editors), pages 51–56.
-    
-    --->
+Citing
+------
+
+If you use results produced with this package in a scientific 
+publication, please just mention the package name in the text and 
+cite the Zenodo DOI of this project:
+
+|DOI-URI|
+
+You can select a citation style from the dropdown menu in the 
+"Cite as" section on the Zenodo page.
+
+``predsim`` relies on other software that also should be cited. Below are 
+suggested citations for Seq-Gen, DendroPy and pandas, 
+respectively:
+
+* Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 
+  Carlo simulation of DNA sequence evolution along phylogenetic trees. 
+  Comput. Appl. Biosci. 13:235–238.
+
+* Sukumaran J, Holder MT. 2010. DendroPy: a Python library for 
+  phylogenetic computing. Bioinformatics 26:1569–1571.
+
+* McKinney W. 2010. Data structures for statistical computing in python.
+  *In* Proceedings of the 9th Python in Science Conference 
+  (van der Walt S, Millman J, editors), pages 51–56.
+
 
 Author
 ------
@@ -151,5 +149,9 @@ Markus Englund, `orcid.org/0000-0003-1688-7112 <http://orcid.org/0000-0003-1688-
 
 .. |Build-Status| image:: https://travis-ci.org/jmenglund/predsim.svg?branch=master
    :target: https://travis-ci.org/jmenglund/predsim
+.. |PyPI-Status| image:: https://img.shields.io/pypi/v/predsim.svg
+   :target: https://pypi.python.org/pypi/predsim
 .. |License| image:: https://img.shields.io/badge/license-MIT-blue.svg
    :target: https://raw.githubusercontent.com/jmenglund/predsim/master/LICENSE.txt
+.. |DOI-URI| image:: https://zenodo.org/badge/23107/jmenglund/predsim.svg
+      :target: https://zenodo.org/badge/latestdoi/23107/jmenglund/predsim

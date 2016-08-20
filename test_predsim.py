@@ -34,7 +34,9 @@ def seqgen_status(path):
         subprocess.check_call(
             SEQGEN_PATH, stdout=f, stderr=subprocess.STDOUT)
         status = True
-    except subprocess.CalledProcessError or OSError:
+    except subprocess.CalledProcessError:
+        status = False
+    except OSError:
         status = False
     finally:
         f.close()

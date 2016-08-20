@@ -45,7 +45,7 @@ def _read_parameter_file(filepath, skip=0, num_records=None):
         sliced = itertools.islice(reader, skip, stop)
         p_dicts = list(sliced)
         return p_dicts
-    
+
     stop = skip + num_records if num_records else None
     try:
         with open(filepath, newline='') as p_file:

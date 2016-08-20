@@ -259,7 +259,7 @@ def parse_args(args):
         '--random-seeds-file',
         type=argparse.FileType('rU'),
         dest='random_seeds_file', metavar='FILE',
-        help='path to file with random seed numbers to pass to Seq-Gen')
+        help='path to file with seed numbers to pass to Seq-Gen')
     parser.add_argument(
         '--commands-file',
         type=argparse.FileType('w'),

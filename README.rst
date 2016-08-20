@@ -94,7 +94,7 @@ Usage
   check the commands run by Seq-Gen.
 
 * Depending on your Python version, you may need to specify the full path to 
-  your Seq-Gen executable with the ``-p`` option.
+  your Seq-Gen executable by using the ``-p`` option.
 
 
 Running tests

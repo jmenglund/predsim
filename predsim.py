@@ -47,10 +47,10 @@ def _read_parameter_file(filepath, skip=0, num_records=None):
         return p_dicts
 
     stop = skip + num_records if num_records else None
-    try:
+    if (sys.version_info >= (3, 0)):
         with open(filepath, newline='') as p_file:
             p_dicts = process_file(p_file, skip=skip, num_records=num_records)
-    except TypeError:  # Python 2.7
+    else:
         with open(filepath) as p_file:
             p_dicts = process_file(p_file, skip=skip, num_records=num_records)
     return p_dicts

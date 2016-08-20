@@ -35,7 +35,7 @@ def _read_parameter_file(filepath, skip=0, num_records=None):
     -------
     p_dicts : list
     """
-    def process_file(pfile, skip=0, num_records=None):
+    def process_file(p_file, skip=0, num_records=None):
         p_file.seek(0)
         try:
             next(p_file)

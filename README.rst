@@ -61,8 +61,7 @@ Usage
 
 .. code-block::
     
-    $ predsim --help
-    $ predsim --help
+    predsim --help
     usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-p FILE]
                    [--random-seeds-file FILE] [--commands-file FILE]
                    pfile tfile [outfile]
@@ -87,8 +86,7 @@ Usage
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
       --random-seeds-file FILE
-                            path to file with random seed numbers to pass to Seq-
-                            Gen
+                            path to file with seed numbers to pass to Seq-Gen
       --commands-file FILE  path to output file with used Seq-Gen commands
 
 

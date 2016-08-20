@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import pytest
 import shutil
 import subprocess
 import tempfile
 
-import pandas
 import dendropy
 
 from os import devnull
 
-from pandas.util.testing import assert_dict_equal
-
 from predsim import (
-    _get_skiprows,
-    _iterrecords,
+    _read_parameter_file,
     kappa_to_titv,
     get_seqgen_params,
     simulate_matrix,
@@ -37,9 +34,7 @@ def seqgen_status(path):
         subprocess.check_call(
             SEQGEN_PATH, stdout=f, stderr=subprocess.STDOUT)
         status = True
-    except subprocess.CalledProcessError:
-        status = False
-    except OSError:
+    except subprocess.CalledProcessError or OSError:
         status = False
     finally:
         f.close()
@@ -50,21 +45,25 @@ seqgen_required = pytest.mark.skipif(
     seqgen_status(SEQGEN_PATH) is False, reason='Seq-Gen is required')
 
 
-class TestGetSkiprows():
+class TestReadParameterFile():
 
-    def test_noskip(self):
-        assert _get_skiprows(0) == [0]
+    p_file_string = (
+        '[ID: 1234567890]\n'
+        'Gen\tLnL\tLnPr\tTL\tkappa\tpi(A)\tpi(C)\tpi(G)\tpi(T)\talpha\n'
+        '0\t-5\t50\t0.5\t1\t0.25\t0.25\t0.25\t0.25\t1\n'
+        '500\t-5\t50\t0.5\t1\t0.25\t0.25\t0.25\t0.25\t1')
 
-    def test_skip(self):
-        assert _get_skiprows(2) == [0, 2, 3]
+    def test_read_parameter_file(self, tmpdir):
+        f = tmpdir.join('p-file.txt')
+        f.write(self.p_file_string)
+        p_dicts = _read_parameter_file(str(f.dirpath('p-file.txt')))
+        assert len(p_dicts) == 2
 
-
-class TestIterRecords():
-
-    frame = pandas.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6]})
-
-    def test_iterrecords(self):
-        assert isinstance(list(_iterrecords(self.frame))[0], dict)
+    def test_read_empty_parameter_file(self, tmpdir):
+        f = tmpdir.join('empty-p-file.txt')
+        f.write('')
+        with pytest.raises(ValueError):
+            _read_parameter_file(str(f.dirpath('empty-p-file.txt')))
 
 
 class TestKappaConversion():
@@ -103,28 +102,33 @@ class TestSingleSimulation():
     tree_string = '((t1:0,t2:0):0,t3:0,t4:0);'
     tree = dendropy.Tree.get_from_string(tree_string, 'newick')
 
-    rates = {'general_rates': '1,1,1,1,1,1'}
+    rates = '1,1,1,1,1,1'
 
     def test_simulate_empty_params(self):
-        matrix, command = simulate_matrix(SEQGEN_PATH, {}, self.tree)
+        matrix, command = simulate_matrix(SEQGEN_PATH, self.tree)
         assert len(matrix) == 4
         assert matrix.sequence_size == 1000
         assert len(command.split('\t')) == 2
         assert 'HKY' in command
 
     def test_gtr(self):
-        matrix, command = simulate_matrix(SEQGEN_PATH, self.rates, self.tree)
+        matrix, command = simulate_matrix(
+            SEQGEN_PATH, self.tree, general_rates=self.rates)
         assert 'GTR' in command
 
     def test_ti_tv(self):
-        matrix, command = simulate_matrix(
-            SEQGEN_PATH, {'ti_tv': 1}, self.tree)
+        matrix, command = simulate_matrix(SEQGEN_PATH, self.tree, ti_tv=1)
         assert 'HKY' in command
         assert ' -t1 ' in command
 
+    def test_ti_tv_and_gtr(self):
+        with pytest.raises(ValueError):
+            simulate_matrix(
+                SEQGEN_PATH, self.tree, ti_tv=1, general_rates=self.rates)
+
     def test_gamma(self):
         matrix, command = simulate_matrix(
-            SEQGEN_PATH, {'gamma_shape': 2}, self.tree)
+            SEQGEN_PATH, self.tree, gamma_shape=2)
         assert ' -a2 ' in command
 
 
@@ -134,25 +138,38 @@ class TestMultipleSimulations():
     treelist_string = '((t1:0,t2:0):0,t3:0,t4:0);((t1:0,t2:0):0,t3:0,t4:0);'
     treelist = dendropy.TreeList.get_from_string(treelist_string, 'newick')
 
-    p_frame = pandas.DataFrame({
-        'pi(A)': [0.25, 0.25],
-        'pi(C)': [0.25, 0.25],
-        'pi(G)': [0.25, 0.25],
-        'pi(T)': [0.25, 0.25]})
+    p_dicts = [
+        {
+            'pi(A)': '0.25',
+            'pi(C)': '0.25',
+            'pi(G)': '0.25',
+            'pi(T)': '0.25',
+        }, {
+            'pi(A)': '0.25',
+            'pi(C)': '0.25',
+            'pi(G)': '0.25',
+            'pi(T)': '0.25',
+        }]
+
+    rng_seeds = ['123321', '456654']
+
+    def test_multiple_simulations(self):
+        simulate_multiple_matrices(
+            SEQGEN_PATH, self.treelist, self.p_dicts, self.rng_seeds)
 
     def test_empty_input(self):
-        with pytest.raises(ValueError):
-            simulate_multiple_matrices(
-                SEQGEN_PATH, pandas.DataFrame(), dendropy.TreeList())
-
-    def test_two_trees(self):
-        simulate_multiple_matrices(
-            SEQGEN_PATH, self.p_frame, self.treelist)
+        with pytest.raises(AssertionError):
+            simulate_multiple_matrices(SEQGEN_PATH, dendropy.TreeList(), [])
 
     def test_parameter_mismatch(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(AssertionError):
             simulate_multiple_matrices(
-                SEQGEN_PATH, self.p_frame[:1], self.treelist[:2])
+                SEQGEN_PATH, self.treelist[:2], self.p_dicts[:1])
+
+    def test_rng_seeds_mismatch(self):
+        with pytest.raises(AssertionError):
+            simulate_multiple_matrices(
+                SEQGEN_PATH, self.treelist, self.p_dicts, rng_seeds=['123321'])
 
 
 @seqgen_required
@@ -165,9 +182,10 @@ class TestArgumentParser():
     def test_parser(self):
         with tempfile.NamedTemporaryFile() as p_file:
             with tempfile.NamedTemporaryFile() as t_file:
-                with tempfile.NamedTemporaryFile() as command_file:
+                with tempfile.NamedTemporaryFile() as commands_file:
                     parse_args([
-                        '-l100', '-s1', '-g4', '-c', command_file.name,
+                        '-l100', '-s1', '-g4',
+                        '--commands-file', commands_file.name,
                         p_file.name, t_file.name])
 
 

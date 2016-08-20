@@ -6,39 +6,46 @@ Command-line tool for simulating predictive datasets from MrBayes' output.
 """
 
 import argparse
+import csv
+import itertools
 import math
 import shutil
 import sys
 
 import dendropy
-import pandas
 
 
 __authors__ = 'Markus Englund'
 __license__ = 'MIT'
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 
 
-def _get_skiprows(cnt):
-    """
-    Return a list with rows to skip when
-    reading the p-file.
+def _read_parameter_file(filepath, skip=0, num_records=None):
+    """Read MrBayes p-file into a list of dicts.
 
     Parameters
     ----------
-    cnt : int
-        Number of rows to be skipped.
+    filepath : str
+    skip : int
+        Number of records to skip in the beginning of the file.
+    num_records : int
+        Number of records to read after the skipped records.
+
+    Returns
+    -------
+    p_dicts : list
     """
-    skiprows = [0]
-    if cnt > 0:
-        skiprows.extend(range(2, cnt + 2))
-    return skiprows
-
-
-def _iterrecords(frame):
-    """Iterate over the rows of a DataFrame as dicts."""
-    for record in frame.to_dict('records'):
-        yield record
+    stop = skip + num_records if num_records else None
+    with open(filepath, newline='') as p_file:
+        p_file.seek(0)
+        try:
+            next(p_file)
+        except StopIteration:
+            raise ValueError('No records to process in p-file.')
+        reader = csv.DictReader(p_file, delimiter='\t')
+        sliced = itertools.islice(reader, skip, stop)
+        p_dicts = list(sliced)
+    return p_dicts
 
 
 def kappa_to_titv(kappa, piA, piC, piG, piT):
@@ -107,53 +114,54 @@ def get_seqgen_params(mrbayes_params):
 
 
 def simulate_matrix(
-        seqgen_path, seqgen_params, tree, seq_len=1000, gamma_cats=None):
+        seqgen_path, tree, seq_len=1000, state_freqs=None,
+        ti_tv=None, general_rates=None, gamma_shape=None,
+        gamma_cats=None, prop_invar=None, rng_seed=None):
     """
-    Simulate a predictive datasets with Seq-Gen.
+    Simulate a dataset with Seq-Gen.
 
     Parameters
     ----------
     seqgen_path : str
-        Path to Seq-Gen executable.
-    seqgen_params : dict
-        Parameter inputs for Seq-Gen.
-    tree : Dendropy.Tree
+    tree : dendropy.Tree
     seq_len : int (default: 1000)
         Lengt of sequences to simulate.
+    state_freqs : str (default: None)
+        State frequences. If `None`, use equal frequences.
+    ti_tv : float (default: None)
+        transition/transversion rate ratio.
+    general_rates : str (default: None)
+        General rate matrix.
+    gamma_shape : float (default: None)
     gamma_cats : int (default: None)
-        Number of discrete gamma rate categories
-        (continous by default).
-
-    Returns
-    -------
-    matrix, command : tuple (dendropy.CharacterMatrix, str)
-        Simulated dataset and used Seq-Gen command.
+        Number of gamma rate categories. If `None`,
+        use a continous gamma distribution.
+    prop_invar : float (default: None)
+        Proportion of invariable sites.
+    rng_seed : int (default: None)
+        Seed for the random number generator. If `None`,
+        a seed number will be generated automatically.
     """
+    if ti_tv and general_rates:
+        raise ValueError(
+            '"ti_tv" or "general_rates" or both must be set to "None"')
     s = dendropy.interop.seqgen.SeqGen()
     try:
         full_path = shutil.which(seqgen_path)  # Python 3.3 and higher
         s.seqgen_path = full_path if full_path else seqgen_path
     except AttributeError:
         s.seqgen_path = seqgen_path
-    s.char_model = 'GTR' if ('general_rates' in seqgen_params) else 'HKY'
+    s.char_model = 'GTR' if general_rates else 'HKY'
     s.seq_len = seq_len
-    try:
-        s.gamma_shape = seqgen_params['gamma_shape']
-        s.gamma_cats = gamma_cats
-    except KeyError:
-        pass
-    try:
-        s.prop_invar = seqgen_params['prop_invar']
-    except KeyError:
-        pass
-    try:
-        s.state_freqs = seqgen_params['state_freqs']
-    except KeyError:
-        pass
-    if 'general_rates' in seqgen_params:
-        s.general_rates = seqgen_params['general_rates']
-    elif 'ti_tv' in seqgen_params:
-        s.ti_tv = seqgen_params['ti_tv']
+    s.state_freqs = state_freqs
+    if general_rates:
+        s.general_rates = general_rates
+    elif ti_tv:
+        s.ti_tv = ti_tv
+    s.gamma_shape = gamma_shape
+    s.gamma_cats = gamma_cats
+    s.prop_invar = prop_invar
+    s.rng_seed = rng_seed
     matrix = s.generate(tree).char_matrices[0]
     tree_string = tree.as_string('newick', suppress_rooting=True).rstrip()
     command = ' '.join(s._compose_arguments()) + '\t' + tree_string
@@ -161,7 +169,8 @@ def simulate_matrix(
 
 
 def simulate_multiple_matrices(
-        seqgen_path, p_frame, tree_list, seq_len=1000, gamma_cats=None):
+        seqgen_path, tree_list, p_dicts, rng_seeds=None,
+        seq_len=1000, gamma_cats=None):
     """
     Simulate multiple predictive datasets with Seq-Gen.
 
@@ -169,9 +178,11 @@ def simulate_multiple_matrices(
     ----------
     seqgen_path : str
         Path to Seq-Gen executable.
-    p_frame : pandas.DataFrame
-        Parameter inputs for Seq-Gen.
     tree_list : Dendropy.TreeList
+    p_dicts : list
+        Parameter values from a MrBayes' p-file.
+    rng_seeds : list
+        Random seed numbers passed to Seq-Gen.
     seq_len : int (default: 1000)
         Lengt of sequences to simulate.
     gamma_cats : int (default: None)
@@ -180,22 +191,25 @@ def simulate_multiple_matrices(
 
     Returns
     -------
-    matrix, command : tuple (dendropy.CharacterMatrix, str)
-        Simulated dataset and used Seq-Gen command.
+    matrices, commands : tuple (dendropy.DataSet, list)
+        Simulated dataset and used Seq-Gen commands.
     """
-    if len(p_frame) == 0:
-        raise ValueError('No parameter values found')
-    if len(p_frame) != len(tree_list):
-        raise ValueError(
-            'Number of parameter values do not match the number of trees.')
-    p_frame['tree'] = tree_list
+    assert len(p_dicts) == len(tree_list), (
+        'Number of trees does not match the number of parameter values.')
+    if rng_seeds is not None:
+        assert len(p_dicts) == len(rng_seeds), (
+            'Number of seed numbers does not match '
+            'the number of parameter values.')
+    assert len(p_dicts) > 0, 'No records to process!'
+    rng_seeds = rng_seeds if rng_seeds else [None] * len(p_dicts)
+    zipped = zip(tree_list, p_dicts, rng_seeds)
     matrices = dendropy.DataSet()
     seqgen_commands = []
-    for record in _iterrecords(p_frame):
-        tree = record.pop('tree')
-        seqgen_params = get_seqgen_params(record)
+    for tree, p_dict, rng_seed in zipped:
+        seqgen_params = get_seqgen_params(p_dict)
         matrix, command = simulate_matrix(
-            seqgen_path, seqgen_params, tree, seq_len, gamma_cats)
+            seqgen_path, tree, seq_len=seq_len, rng_seed=rng_seed,
+            **seqgen_params)
         matrices.add(matrix)
         seqgen_commands.append(command)
     matrices.unify_taxon_namespaces()
@@ -213,27 +227,36 @@ def parse_args(args):
         version='predsim ' + __version__)
     parser.add_argument(
         '-l', '--length', type=int, action='store', default=1000,
-        metavar='INT', dest='length',
+        metavar='N', dest='length',
         help='sequence lenght (default: 1000)')
     parser.add_argument(
-        '-g', '--gamma-cats', type=int, action='store', metavar='INT',
+        '-g', '--gamma-cats', type=int, action='store', metavar='N',
         dest='gamma_cats',
         help='number of gamma rate categories (default: continuous)')
     parser.add_argument(
-        '-c', '--commands-file',
-        type=argparse.FileType('w'),
-        dest='commands_file', metavar='FILE',
-        help='path to output file with used Seq-Gen commands')
-    parser.add_argument(
-        '-s', '--skip', type=int, action='store', metavar='INT',
+        '-s', '--skip', type=int, action='store', metavar='N',
         dest='skip', default=0, help=(
             'number of records (trees) to skip at the beginning '
             'of the sample (default: 0)'))
+    parser.add_argument(
+        '-n', '--num-records', type=int, action='store', metavar='N',
+        dest='num_records', default=None, help=(
+            'number of records (trees) to use in the simulation'))
     parser.add_argument(
         '-p', '--seqgen-path',
         type=str, default='seq-gen',
         dest='seqgen_path', metavar='FILE',
         help='path to a Seq-Gen executable (default: "seq-gen")')
+    parser.add_argument(
+        '--random-seeds-file',
+        type=argparse.FileType('rU'),
+        dest='random_seeds_file', metavar='FILE',
+        help='path to file with random seed numbers to pass to Seq-Gen')
+    parser.add_argument(
+        '--commands-file',
+        type=argparse.FileType('w'),
+        dest='commands_file', metavar='FILE',
+        help='path to output file with used Seq-Gen commands')
     parser.add_argument(
         'pfile', type=argparse.FileType('rU'),
         help='path to a MrBayes p-file')
@@ -251,19 +274,22 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
     parser = parse_args(args)
-    skiprows = _get_skiprows(parser.skip)
-    p_frame = pandas.read_table(parser.pfile, skiprows=skiprows)
     tree_list = dendropy.TreeList.get_from_stream(
-        parser.tfile, 'nexus', tree_offset=parser.skip)
-    simulated_matrices, seqgen_commands = simulate_multiple_matrices(
-        parser.seqgen_path,
-        p_frame,
-        tree_list,
-        seq_len=parser.length,
-        gamma_cats=parser.gamma_cats)
+        parser.tfile, 'nexus', tree_offset=parser.skip)[:parser.num_records]
+    p_dicts = _read_parameter_file(
+        parser.pfile.name, parser.skip, parser.num_records)
+    if parser.random_seeds_file:
+        rng_seeds = parser.random_seeds_file.read().splitlines()
+        rng_seeds = [line for line in rng_seeds if line.strip() != '']
+        print(rng_seeds)
+    else:
+        rng_seeds = None
+    matrices, seqgen_commands = simulate_multiple_matrices(
+        parser.seqgen_path, tree_list, p_dicts, rng_seeds=rng_seeds,
+        seq_len=parser.length, gamma_cats=parser.gamma_cats)
     if parser.commands_file:
         parser.commands_file.write('\n'.join(seqgen_commands))
-    parser.outfile.write(simulated_matrices.as_string(schema='nexus'))
+    parser.outfile.write(matrices.as_string(schema='nexus'))
 
 
 if __name__ == '__main__':  # pragma: no cover

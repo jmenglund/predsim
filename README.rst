@@ -8,8 +8,8 @@ datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files.
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
 variant available in MrBayes (JC69, HKY85 etc.). The script uses 
 `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for 
-simulating the DNA-sequences and builds on the third-party libraries 
-`DendroPy <http://dendropy.org>`_ and `pandas <http://pandas.pydata.org>`_.
+simulating the DNA-sequences and builds on the third-party library 
+`DendroPy <http://dendropy.org>`_.
 
 The code has been tested with Python 2.7, 3.3, 3.4 and 3.5.
 
@@ -62,8 +62,10 @@ Usage
 .. code-block::
     
     $ predsim --help
-    usage: predsim [-h] [-V] [-l INT] [-g INT] [-c FILE] [-s INT] [-p FILE]
-                       pfile tfile [outfile]
+    $ predsim --help
+    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-p FILE]
+                   [--random-seeds-file FILE] [--commands-file FILE]
+                   pfile tfile [outfile]
     
     A command-line utility that reads posterior output of MrBayes and simulates
     predictive datasets with Seq-Gen.
@@ -76,22 +78,25 @@ Usage
     optional arguments:
       -h, --help            show this help message and exit
       -V, --version         show program's version number and exit
-      -l INT, --length INT  sequence lenght (default: 1000)
-      -g INT, --gamma-cats INT
-                            number of gamma rate categories (default: continuous)
-      -c FILE, --commands-file FILE
-                            path to output file with used Seq-Gen commands
-      -s INT, --skip INT    number of records (trees) to skip at the beginning of
+      -l N, --length N      sequence lenght (default: 1000)
+      -g N, --gamma-cats N  number of gamma rate categories (default: continuous)
+      -s N, --skip N        number of records (trees) to skip at the beginning of
                             the sample (default: 0)
+      -n N, --num-records N
+                            number of records (trees) to use in the simulation
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
+      --random-seeds-file FILE
+                            path to file with random seed numbers to pass to Seq-
+                            Gen
+      --commands-file FILE  path to output file with used Seq-Gen commands
 
 
-* It is strongly recommended that you use the ``-c FILE`` option to check the 
-  commands run by Seq-Gen.
+* It is strongly recommended that you use the ``-commands-file`` option to
+  check the commands run by Seq-Gen.
 
-* Depending on your Python version, you might need to specify the full path to 
-  your Seq-Gen executable with the ``-p FILE`` option.
+* Depending on your Python version, you may need to specify the full path to 
+  your Seq-Gen executable with the ``-p`` option.
 
 
 Running tests
@@ -127,8 +132,7 @@ You can select a citation style from the dropdown menu in the
 "Cite as" section on the Zenodo page.
 
 ``predsim`` relies on other software that also should be cited. Below are 
-suggested citations for Seq-Gen, DendroPy and pandas, 
-respectively:
+suggested citations for Seq-Gen and DendroPy, respectively:
 
 * Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 
   Carlo simulation of DNA sequence evolution along phylogenetic trees. 
@@ -136,10 +140,6 @@ respectively:
 
 * Sukumaran J, Holder MT. 2010. DendroPy: a Python library for 
   phylogenetic computing. Bioinformatics 26:1569–1571.
-
-* McKinney W. 2010. Data structures for statistical computing in python.
-  *In* Proceedings of the 9th Python in Science Conference 
-  (van der Walt S, Millman J, editors), pages 51–56.
 
 
 Author

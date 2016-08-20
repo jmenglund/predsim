@@ -35,8 +35,7 @@ def _read_parameter_file(filepath, skip=0, num_records=None):
     -------
     p_dicts : list
     """
-    stop = skip + num_records if num_records else None
-    with open(filepath, newline='') as p_file:
+    def process_file(pfile, skip=0, num_records=None):
         p_file.seek(0)
         try:
             next(p_file)
@@ -45,6 +44,15 @@ def _read_parameter_file(filepath, skip=0, num_records=None):
         reader = csv.DictReader(p_file, delimiter='\t')
         sliced = itertools.islice(reader, skip, stop)
         p_dicts = list(sliced)
+        return p_dicts
+    
+    stop = skip + num_records if num_records else None
+    try:
+        with open(filepath, newline='') as p_file:
+            p_dicts = process_file(p_file, skip=skip, num_records=num_records)
+    except TypeError:  # Python 2.7
+        with open(filepath) as p_file:
+            p_dicts = process_file(p_file, skip=skip, num_records=num_records)
     return p_dicts
 
 

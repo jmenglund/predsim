@@ -154,10 +154,10 @@ def simulate_matrix(
         raise ValueError(
             '"ti_tv" or "general_rates" or both must be set to "None"')
     s = dendropy.interop.seqgen.SeqGen()
-    try:
-        full_path = shutil.which(seqgen_path)  # Python 3.3 and higher
+    if (sys.version_info >= (3, 3)):
+        full_path = shutil.which(seqgen_path)
         s.seqgen_path = full_path if full_path else seqgen_path
-    except AttributeError:
+    else:
         s.seqgen_path = seqgen_path
     s.char_model = 'GTR' if general_rates else 'HKY'
     s.seq_len = seq_len

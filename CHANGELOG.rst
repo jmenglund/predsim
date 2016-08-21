@@ -8,20 +8,27 @@ This project adheres to `Semantic Versioning <http://semver.org/>`_.
 v0.2.0 - Unreleased
 -------------------
 
+Added
+~~~~~
+
+* The command-line option ``--random-seeds-file`` for passing seed numbers 
+  to Seq-Gen. This option will make it possible to replicate simulations.
+* The command-line option ``--commands-file`` for outputting Seq-Gen commands 
+  to a file (replaces the ``-c`` option).
+
 Changed
 ~~~~~~~
 
 * The `pandas <http://pandas.pydata.org>`_ library is no longer required.
-* The command-line ``--commands-file`` option replaces the ``-c`` option 
-  for writing used Seq-Gen commands to a file.
 * The principles of `Semantic Versioning <http://semver.org/>`_ will be 
   followed for new releases.
 
-Added
-~~~~~
+Removed
+~~~~~~~
 
-* The command-line option ``--random-seeds-file``. This option lets the user
-  replicate simulations by passing seed numbers to Seq-Gen.
+* The command-line ``-c`` option for writing Seq-Gen commands to a file 
+  (replaced by the ``--commands-file`` option).
+
 
 `View commits <https://github.com/jmenglund/predsim/compare/v0.1.1...v0.2.0>`_
 

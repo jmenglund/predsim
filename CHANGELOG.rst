@@ -11,8 +11,8 @@ v0.2.0 - Unreleased
 Added
 ~~~~~
 
-* The command-line option ``--random-seeds-file`` for passing seed numbers 
-  to Seq-Gen. This option will make it possible to replicate simulations.
+* The command-line option ``--seeds-file`` for passing seed numbers 
+  to Seq-Gen. This option allows the user to exactly repeat simulations.
 * The command-line option ``--commands-file`` for outputting Seq-Gen commands 
   to a file (replaces the ``-c`` option).
 

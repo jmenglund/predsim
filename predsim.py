@@ -256,9 +256,9 @@ def parse_args(args):
         dest='seqgen_path', metavar='FILE',
         help='path to a Seq-Gen executable (default: "seq-gen")')
     parser.add_argument(
-        '--random-seeds-file',
+        '--seeds-file',
         type=argparse.FileType('rU'),
-        dest='random_seeds_file', metavar='FILE',
+        dest='seeds_file', metavar='FILE',
         help='path to file with seed numbers to pass to Seq-Gen')
     parser.add_argument(
         '--commands-file',
@@ -286,10 +286,9 @@ def main(args=None):
         parser.tfile, 'nexus', tree_offset=parser.skip)[:parser.num_records]
     p_dicts = _read_parameter_file(
         parser.pfile.name, parser.skip, parser.num_records)
-    if parser.random_seeds_file:
-        rng_seeds = parser.random_seeds_file.read().splitlines()
+    if parser.seeds_file:
+        rng_seeds = parser.seeds_file.read().splitlines()
         rng_seeds = [line for line in rng_seeds if line.strip() != '']
-        print(rng_seeds)
     else:
         rng_seeds = None
     matrices, seqgen_commands = simulate_multiple_matrices(

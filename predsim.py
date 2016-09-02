@@ -287,8 +287,8 @@ def main(args=None):
     p_dicts = _read_parameter_file(
         parser.pfile.name, parser.skip, parser.num_records)
     if parser.seeds_file:
-        rng_seeds = parser.seeds_file.read().splitlines()
-        rng_seeds = [line for line in rng_seeds if line.strip() != '']
+        lines = parser.seeds_file.readlines()
+        rng_seeds = [line for line in lines if line.strip() != '']
     else:
         rng_seeds = None
     matrices, seqgen_commands = simulate_multiple_matrices(

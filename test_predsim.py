@@ -107,21 +107,21 @@ class TestSingleSimulation():
     rates = '1,1,1,1,1,1'
 
     def test_simulate_empty_params(self):
-        matrix, command = simulate_matrix(SEQGEN_PATH, self.tree)
-        assert len(matrix) == 4
-        assert matrix.sequence_size == 1000
-        assert len(command.split('\t')) == 2
-        assert 'HKY' in command
+        result = simulate_matrix(SEQGEN_PATH, self.tree)
+        assert len(result.char_matrix) == 4
+        assert result.char_matrix.sequence_size == 1000
+        assert result.tree == self.tree
+        assert 'HKY' in result.command_line
 
     def test_gtr(self):
-        matrix, command = simulate_matrix(
+        result = simulate_matrix(
             SEQGEN_PATH, self.tree, general_rates=self.rates)
-        assert 'GTR' in command
+        assert 'GTR' in result.command_line
 
     def test_ti_tv(self):
-        matrix, command = simulate_matrix(SEQGEN_PATH, self.tree, ti_tv=1)
-        assert 'HKY' in command
-        assert ' -t1 ' in command
+        result = simulate_matrix(SEQGEN_PATH, self.tree, ti_tv=1)
+        assert 'HKY' in result.command_line
+        assert ' -t1 ' in result.command_line
 
     def test_ti_tv_and_gtr(self):
         with pytest.raises(ValueError):
@@ -129,9 +129,9 @@ class TestSingleSimulation():
                 SEQGEN_PATH, self.tree, ti_tv=1, general_rates=self.rates)
 
     def test_gamma(self):
-        matrix, command = simulate_matrix(
+        result = simulate_matrix(
             SEQGEN_PATH, self.tree, gamma_shape=2)
-        assert ' -a2 ' in command
+        assert ' -a2 ' in result.command_line
 
 
 @seqgen_required

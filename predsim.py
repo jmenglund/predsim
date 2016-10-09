@@ -20,6 +20,14 @@ __license__ = 'MIT'
 __version__ = '0.2.0'
 
 
+class SeqGenResult(object):
+
+    def __init__(self):
+        self.char_matrix = None
+        self.command_line = None
+        self.tree = None
+
+
 def _read_parameter_file(filepath, skip=0, num_records=None):
     """Read MrBayes p-file into a list of dicts.
 
@@ -170,10 +178,11 @@ def simulate_matrix(
     s.gamma_cats = gamma_cats
     s.prop_invar = prop_invar
     s.rng_seed = rng_seed
-    matrix = s.generate(tree).char_matrices[0]
-    tree_string = tree.as_string('newick', suppress_rooting=True).rstrip()
-    command = ' '.join(s._compose_arguments()) + '\t' + tree_string
-    return (matrix, command)
+    result = SeqGenResult()
+    result.char_matrix = s.generate(tree).char_matrices[0]
+    result.tree = tree
+    result.command_line = ' '.join(s._compose_arguments())
+    return result
 
 
 def simulate_multiple_matrices(
@@ -215,9 +224,11 @@ def simulate_multiple_matrices(
     seqgen_commands = []
     for tree, p_dict, rng_seed in zipped:
         seqgen_params = get_seqgen_params(p_dict)
-        matrix, command = simulate_matrix(
+        result = simulate_matrix(
             seqgen_path, tree, seq_len=seq_len, rng_seed=rng_seed,
             **seqgen_params)
+        matrix = result.char_matrix
+        command = result.command_line
         matrices.add(matrix)
         seqgen_commands.append(command)
     matrices.unify_taxon_namespaces()

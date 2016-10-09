@@ -107,7 +107,7 @@ class TestSingleSimulation():
     rates = '1,1,1,1,1,1'
 
     def test_simulate_empty_params(self):
-        result = simulate_matrix(SEQGEN_PATH, self.tree)
+        result = simulate_matrix(self.tree, seqgen_path=SEQGEN_PATH)
         assert len(result.char_matrix) == 4
         assert result.char_matrix.sequence_size == 1000
         assert result.tree == self.tree
@@ -115,22 +115,23 @@ class TestSingleSimulation():
 
     def test_gtr(self):
         result = simulate_matrix(
-            SEQGEN_PATH, self.tree, general_rates=self.rates)
+            self.tree, general_rates=self.rates, seqgen_path=SEQGEN_PATH)
         assert 'GTR' in result.command_line
 
     def test_ti_tv(self):
-        result = simulate_matrix(SEQGEN_PATH, self.tree, ti_tv=1)
+        result = simulate_matrix(self.tree, ti_tv=1, seqgen_path=SEQGEN_PATH)
         assert 'HKY' in result.command_line
         assert ' -t1 ' in result.command_line
 
     def test_ti_tv_and_gtr(self):
         with pytest.raises(ValueError):
             simulate_matrix(
-                SEQGEN_PATH, self.tree, ti_tv=1, general_rates=self.rates)
+                self.tree, ti_tv=1, general_rates=self.rates,
+                seqgen_path=SEQGEN_PATH)
 
     def test_gamma(self):
         result = simulate_matrix(
-            SEQGEN_PATH, self.tree, gamma_shape=2)
+            self.tree, gamma_shape=2, seqgen_path=SEQGEN_PATH)
         assert ' -a2 ' in result.command_line
 
 
@@ -157,21 +158,24 @@ class TestMultipleSimulations():
 
     def test_multiple_simulations(self):
         simulate_multiple_matrices(
-            SEQGEN_PATH, self.treelist, self.p_dicts, self.rng_seeds)
+            self.treelist, self.p_dicts, self.rng_seeds,
+            seqgen_path=SEQGEN_PATH)
 
     def test_empty_input(self):
         with pytest.raises(AssertionError):
-            simulate_multiple_matrices(SEQGEN_PATH, dendropy.TreeList(), [])
+            simulate_multiple_matrices(
+                dendropy.TreeList(), [], seqgen_path=SEQGEN_PATH)
 
     def test_parameter_mismatch(self):
         with pytest.raises(AssertionError):
             simulate_multiple_matrices(
-                SEQGEN_PATH, self.treelist[:2], self.p_dicts[:1])
+                self.treelist[:2], self.p_dicts[:1], seqgen_path=SEQGEN_PATH)
 
     def test_rng_seeds_mismatch(self):
         with pytest.raises(AssertionError):
             simulate_multiple_matrices(
-                SEQGEN_PATH, self.treelist, self.p_dicts, rng_seeds=['123321'])
+                self.treelist, self.p_dicts, rng_seeds=['123321'],
+                seqgen_path=SEQGEN_PATH)
 
 
 @seqgen_required

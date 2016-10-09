@@ -130,15 +130,14 @@ def get_seqgen_params(mrbayes_params):
 
 
 def simulate_matrix(
-        seqgen_path, tree, seq_len=1000, state_freqs=None,
-        ti_tv=None, general_rates=None, gamma_shape=None,
-        gamma_cats=None, prop_invar=None, rng_seed=None):
+        tree, seq_len=1000, state_freqs=None, ti_tv=None,
+        general_rates=None, gamma_shape=None, gamma_cats=None,
+        prop_invar=None, rng_seed=None, seqgen_path='seq-gen'):
     """
     Simulate a dataset with Seq-Gen.
 
     Parameters
     ----------
-    seqgen_path : str
     tree : dendropy.Tree
     seq_len : int (default: 1000)
         Lengt of sequences to simulate.
@@ -157,6 +156,8 @@ def simulate_matrix(
     rng_seed : int (default: None)
         Seed for the random number generator. If `None`,
         a seed number will be generated automatically.
+    seqgen_path : str (default: "seq-gen")
+        Path to Seq-Gen executable.
     """
     if ti_tv and general_rates:
         raise ValueError(
@@ -186,15 +187,13 @@ def simulate_matrix(
 
 
 def simulate_multiple_matrices(
-        seqgen_path, tree_list, p_dicts, rng_seeds=None,
-        seq_len=1000, gamma_cats=None):
+        tree_list, p_dicts, rng_seeds=None, seq_len=1000,
+        gamma_cats=None, seqgen_path='seq-gen'):
     """
     Simulate multiple predictive datasets with Seq-Gen.
 
     Parameters
     ----------
-    seqgen_path : str
-        Path to Seq-Gen executable.
     tree_list : Dendropy.TreeList
     p_dicts : list
         Parameter values from a MrBayes' p-file.
@@ -205,6 +204,8 @@ def simulate_multiple_matrices(
     gamma_cats : int (default: None)
         Number of discrete gamma rate categories
         (continous by default).
+    seqgen_path : str
+        Path to Seq-Gen executable.
 
     Returns
     -------
@@ -225,8 +226,8 @@ def simulate_multiple_matrices(
     for tree, p_dict, rng_seed in zipped:
         seqgen_params = get_seqgen_params(p_dict)
         result = simulate_matrix(
-            seqgen_path, tree, seq_len=seq_len, rng_seed=rng_seed,
-            **seqgen_params)
+            tree, seq_len=seq_len, rng_seed=rng_seed,
+            **seqgen_params, seqgen_path=seqgen_path)
         matrix = result.char_matrix
         command = result.command_line
         matrices.add(matrix)
@@ -303,8 +304,8 @@ def main(args=None):
     else:
         rng_seeds = None
     matrices, seqgen_commands = simulate_multiple_matrices(
-        parser.seqgen_path, tree_list, p_dicts, rng_seeds=rng_seeds,
-        seq_len=parser.length, gamma_cats=parser.gamma_cats)
+        tree_list, p_dicts, rng_seeds=rng_seeds, seq_len=parser.length,
+        gamma_cats=parser.gamma_cats, seqgen_path=parser.seqgen_path)
     if parser.commands_file:
         parser.commands_file.write('\n'.join(seqgen_commands))
     parser.outfile.write(matrices.as_string(schema='nexus'))

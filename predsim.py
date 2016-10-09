@@ -227,7 +227,7 @@ def simulate_multiple_matrices(
         seqgen_params = get_seqgen_params(p_dict)
         result = simulate_matrix(
             tree, seq_len=seq_len, rng_seed=rng_seed,
-            **seqgen_params, seqgen_path=seqgen_path)
+            seqgen_path=seqgen_path, **seqgen_params)
         matrix = result.char_matrix
         command = result.command_line
         matrices.add(matrix)

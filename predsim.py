@@ -209,7 +209,8 @@ def simulate_multiple_matrices(
 
     Returns
     -------
-    matrices, commands : tuple (dendropy.DataSet, list)
+    matrices, commands, trees :
+        tuple (dendropy.DataSet, list, dendropy.TreeList)
         Simulated dataset and used Seq-Gen commands.
     """
     assert len(p_dicts) == len(tree_list), (
@@ -223,6 +224,7 @@ def simulate_multiple_matrices(
     zipped = zip(tree_list, p_dicts, rng_seeds)
     matrices = dendropy.DataSet()
     seqgen_commands = []
+    trees = []
     for tree, p_dict, rng_seed in zipped:
         seqgen_params = get_seqgen_params(p_dict)
         result = simulate_matrix(
@@ -230,10 +232,11 @@ def simulate_multiple_matrices(
             seqgen_path=seqgen_path, **seqgen_params)
         matrix = result.char_matrix
         command = result.command_line
+        trees.append(tree.as_string('newick'))
         matrices.add(matrix)
         seqgen_commands.append(command)
     matrices.unify_taxon_namespaces()
-    return (matrices, seqgen_commands)
+    return (matrices, seqgen_commands, trees)
 
 
 def parse_args(args):
@@ -303,7 +306,7 @@ def main(args=None):
         rng_seeds = [line for line in lines if line.strip() != '']
     else:
         rng_seeds = None
-    matrices, seqgen_commands = simulate_multiple_matrices(
+    matrices, seqgen_commands, trees = simulate_multiple_matrices(
         tree_list, p_dicts, rng_seeds=rng_seeds, seq_len=parser.length,
         gamma_cats=parser.gamma_cats, seqgen_path=parser.seqgen_path)
     if parser.commands_file:

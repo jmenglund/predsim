@@ -11,7 +11,7 @@ variant available in MrBayes (JC69, HKY85 etc.). The script uses
 simulating the DNA-sequences and builds on the third-party library 
 `DendroPy <http://dendropy.org>`_.
 
-The code has been tested with Python 2.7, 3.3, 3.4 and 3.5.
+The code has been tested with Python 2.7 and 3.6.
 
 Source repository: `<https://github.com/jmenglund/predsim>`_
 

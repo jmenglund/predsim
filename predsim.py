@@ -17,7 +17,7 @@ import dendropy
 
 __authors__ = 'Markus Englund'
 __license__ = 'MIT'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 
 def main(args=None):

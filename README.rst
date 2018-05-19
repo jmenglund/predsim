@@ -18,7 +18,6 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
 --------------------------------
 
 .. contents:: Table of contents
-   :backlinks: top
    :local:
 
 

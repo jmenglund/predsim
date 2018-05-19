@@ -2,17 +2,23 @@ language: python
 
 python:
     - '2.7'
-    - '3.3'
-    - '3.4'
-    - '3.5'
+    - '3.6'
 
 # whitelist
 branches:
     only:
         - master
 
+install:
+    - pip install .
+    - pip install pycodestyle
+    - pip install pytest
+    - pip install coverage
+   
 script:
-    py.test --cov=predsim.py --pep8
+    - pycodestyle setup.py test_predsim.py predsim.py 
+    - coverage run -m pytest test_predsim.py
+    - coverage report -m predsim.py
 
 after_success:
-  - codecov
+    - codecov

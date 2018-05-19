@@ -68,11 +68,11 @@ def kappa_to_titv(kappa, piA, piC, piG, piT):
     """Calculate transistion/transversion ratio from kappa."""
     tot = piA + piC + piG + piT
     if math.fabs(tot - 1.0) > 1.e-6:
-        piA = piA/tot
-        piC = piC/tot
-        piG = piG/tot
-        piT = piT/tot
-    titv = kappa * (piA * piG + piC * piT)/((piA + piG) * (piC + piT))
+        piA = piA / tot
+        piC = piC / tot
+        piG = piG / tot
+        piT = piT / tot
+    titv = kappa * (piA * piG + piC * piT) / ((piA + piG) * (piC + piT))
     return titv
 
 

@@ -3,15 +3,15 @@ predsim
 
 |Build-Status| |PyPI-Status| |License| |DOI-URI|
 
-``predsim`` is a command-line tool for simulating predictive
+``predsim`` is a simple command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
 variant available in MrBayes (JC69, HKY85 etc.). The script uses 
 `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for 
-simulating the DNA-sequences and builds on the third-party libraries 
-`DendroPy <http://dendropy.org>`_ and `pandas <http://pandas.pydata.org>`_.
+simulating the DNA-sequences and builds on the third-party library 
+`DendroPy <http://dendropy.org>`_.
 
-The code has been tested with Python 2.7, 3.3, 3.4 and 3.5.
+The code has been tested with Python 2.7 and 3.6.
 
 Source repository: `<https://github.com/jmenglund/predsim>`_
 
@@ -22,18 +22,22 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
    :local:
 
 
-Requirements
-------------
+Prerequisites
+-------------
 
-`Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ must be installed on
-your system.
+* Python (version 2.7 or 3.x)
+* The Python library `DendroPy <http://dendropy.org/>`_ (version 4.0 or higher)
+* The command-line tool `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
+
+An easy way to get Python working on your computer is to install the free
+`Anaconda distribution <http://anaconda.com/download)>`_.
 
 
 Installation
 ------------
 
 For most users, the easiest way is probably to install the latest version 
-hosted on `PyPI <https://pypi.python.org/>`_:
+hosted on `PyPI <https://pypi.org/>`_:
 
 .. code-block::
 
@@ -51,9 +55,7 @@ can also be installed using git:
 
 You may consider installing ``predsim`` and its required Python packages 
 within a virtual environment in order to avoid cluttering your system's 
-Python path. See for example the environment management system 
-`conda <http://conda.pydata.org>`_ or the package 
-`virtualenv <https://virtualenv.pypa.io/en/latest/>`_.
+Python path.
 
 
 Usage
@@ -61,9 +63,10 @@ Usage
 
 .. code-block::
     
-    $ predsim --help
-    usage: predsim [-h] [-V] [-l INT] [-g INT] [-c FILE] [-s INT] [-p FILE]
-                       pfile tfile [outfile]
+    predsim --help
+    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-p FILE]
+                   [--seeds-file FILE] [--commands-file FILE]
+                   pfile tfile [outfile]
     
     A command-line utility that reads posterior output of MrBayes and simulates
     predictive datasets with Seq-Gen.
@@ -76,35 +79,50 @@ Usage
     optional arguments:
       -h, --help            show this help message and exit
       -V, --version         show program's version number and exit
-      -l INT, --length INT  sequence lenght (default: 1000)
-      -g INT, --gamma-cats INT
-                            number of gamma rate categories (default: continuous)
-      -c FILE, --commands-file FILE
-                            path to output file with used Seq-Gen commands
-      -s INT, --skip INT    number of records (trees) to skip at the beginning of
+      -l N, --length N      sequence lenght (default: 1000)
+      -g N, --gamma-cats N  number of gamma rate categories (default: continuous)
+      -s N, --skip N        number of records (trees) to skip at the beginning of
                             the sample (default: 0)
+      -n N, --num-records N
+                            number of records (trees) to use in the simulation
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
+      --seeds-file FILE
+                            path to file with seed numbers to pass to Seq-Gen
+      --commands-file FILE  path to output file with used Seq-Gen commands
 
 
-* It is strongly recommended that you use the ``-c FILE`` option to check the 
-  commands run by Seq-Gen.
+* It is strongly recommended that you use the ``-commands-file`` option to
+  check the commands run by Seq-Gen.
 
-* Depending on your Python version, you might need to specify the full path to 
-  your Seq-Gen executable with the ``-p FILE`` option.
+* Depending on your Python version, you may need to specify the full path to 
+  your Seq-Gen executable by using the ``-p`` option.
 
 
-Running tests
--------------
+Running the tests
+-----------------
 
-Testing is carried out with `pytest <http://pytest.org>`_. Here is an 
-example on how to run the test suite and generating a coverage report:
+Testing is carried out with `pytest <https://docs.pytest.org/>`_:
 
 .. code-block::
 
-    $ cd predsim
-    $ pip install pytest pytest-cov pytest-pep8
-    $ py.test -v --cov-report term-missing --cov predsim.py --pep8
+    $ pytest test_predsim.py
+
+Test coverage can be calculated with `Coverage.py
+<https://coverage.readthedocs.io/>`_ using the following commands:
+
+.. code-block::
+
+    $ coverage run -m pytest test_predsim.py
+    $ coverage report -m predsim.py
+
+The code follow style conventions in `PEP8
+<https://www.python.org/dev/peps/pep-0008/>`_, which can be checked
+with `pycodestyle <http://pycodestyle.pycqa.org>`_:
+
+.. code-block::
+
+    $ pycodestyle predsim.py test_predsim.py setup.py
 
 
 License
@@ -127,8 +145,7 @@ You can select a citation style from the dropdown menu in the
 "Cite as" section on the Zenodo page.
 
 ``predsim`` relies on other software that also should be cited. Below are 
-suggested citations for Seq-Gen, DendroPy and pandas, 
-respectively:
+suggested citations for Seq-Gen and DendroPy, respectively:
 
 * Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 
   Carlo simulation of DNA sequence evolution along phylogenetic trees. 
@@ -136,10 +153,6 @@ respectively:
 
 * Sukumaran J, Holder MT. 2010. DendroPy: a Python library for 
   phylogenetic computing. Bioinformatics 26:1569–1571.
-
-* McKinney W. 2010. Data structures for statistical computing in python.
-  *In* Proceedings of the 9th Python in Science Conference 
-  (van der Walt S, Millman J, editors), pages 51–56.
 
 
 Author

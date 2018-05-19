@@ -8,14 +8,14 @@ from io import open
 
 setup(
     name='predsim',
-    version='0.1.1',
+    version='0.2.0',
     description=(
         'Command-line tool for simulating predictive '
         'datasets from MrBayes\' output.'),
     long_description=open(
         join(dirname(__file__), 'README.rst'), encoding='utf-8').read(),
     py_modules=['predsim'],
-    install_requires=['dendropy>=4.0', 'pandas>=0.16'],
+    install_requires=['dendropy>=4.0'],
     entry_points={
         'console_scripts': [
             'predsim = predsim:main']},
@@ -32,8 +32,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     keywords=['simulation', 'Seq-Gen', 'DendroPy'])

@@ -22,11 +22,15 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
    :local:
 
 
-Requirements
-------------
+Prerequisites
+-------------
 
-`Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ must be installed on
-your system.
+* Python (version 2.7 or 3.x)
+* The Python library `DendroPy <http://dendropy.org/>`_ (version 4.0 or higher)
+* The command-line tool `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
+
+An easy way to get Python working on your computer is to install the free
+`Anaconda distribution <http://anaconda.com/download)>`_.
 
 
 Installation
@@ -51,9 +55,7 @@ can also be installed using git:
 
 You may consider installing ``predsim`` and its required Python packages 
 within a virtual environment in order to avoid cluttering your system's 
-Python path. See for example the environment management system 
-`conda <http://conda.pydata.org>`_ or the package 
-`virtualenv <https://virtualenv.pypa.io/en/latest/>`_.
+Python path.
 
 
 Usage

@@ -19,6 +19,7 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
 
 .. contents:: Table of contents
    :local:
+   :backlinks: none
 
 
 Prerequisites

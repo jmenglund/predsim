@@ -26,7 +26,7 @@ Prerequisites
 -------------
 
 * Python (version 2.7 or 3.x)
-* The Python library `DendroPy <http://dendropy.org/>`_ (version 4.0 or higher)
+* The Python library `DendroPy <http://dendropy.org>`_ (version 4.0 or higher)
 * The command-line tool `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
 
 An easy way to get Python working on your computer is to install the free
@@ -43,7 +43,7 @@ hosted on `PyPI <https://pypi.org/>`_:
 
     $ pip install predsim
 
-The project is hosted at https://github.com/jmenglund/predsim and 
+The project is hosted at `<https://github.com/jmenglund/predsim>` and 
 can also be installed using git:
 
 .. code-block::
@@ -167,4 +167,4 @@ Markus Englund, `orcid.org/0000-0003-1688-7112 <http://orcid.org/0000-0003-1688-
 .. |License| image:: https://img.shields.io/badge/license-MIT-blue.svg
    :target: https://raw.githubusercontent.com/jmenglund/predsim/master/LICENSE.txt
 .. |DOI-URI| image:: https://zenodo.org/badge/23107/jmenglund/predsim.svg
-      :target: https://zenodo.org/badge/latestdoi/23107/jmenglund/predsim
+   :target: https://zenodo.org/badge/latestdoi/23107/jmenglund/predsim

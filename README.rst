@@ -3,7 +3,7 @@ predsim
 
 |Build-Status| |PyPI-Status| |License| |DOI-URI|
 
-``predsim`` is a command-line tool for simulating predictive
+``predsim`` is a simple command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
 variant available in MrBayes (JC69, HKY85 etc.). The script uses 

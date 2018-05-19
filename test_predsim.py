@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import pytest
-import shutil
 import subprocess
 import tempfile
 
@@ -86,9 +84,9 @@ class TestKappaConversion():
 
 class TestGetSeqGenParamaters():
 
-    d1 = {'pi(A)': 0.25, 'pi(C)': 0.25,	'pi(G)': 0.25,	'pi(T)': 0.25}
-    d2 = {'state_freqs':  '0.25,0.25,0.25,0.25'}
-    d3 = {'pi(A)': 0.25, 'pi(C)': 0.25,	'pi(G)': 0.25}
+    d1 = {'pi(A)': 0.25, 'pi(C)': 0.25, 'pi(G)': 0.25, 'pi(T)': 0.25}
+    d2 = {'state_freqs': '0.25,0.25,0.25,0.25'}
+    d3 = {'pi(A)': 0.25, 'pi(C)': 0.25, 'pi(G)': 0.25}
 
     def test_equal_basefreqs(self):
         assert get_seqgen_params(self.d1) == self.d2

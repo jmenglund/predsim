@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
-v0.2.0 - Unreleased
+v0.2.0 - 2018-05-19
 -------------------
 
 Added

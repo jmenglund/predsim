@@ -33,7 +33,7 @@ Installation
 ------------
 
 For most users, the easiest way is probably to install the latest version 
-hosted on `PyPI <https://pypi.python.org/>`_:
+hosted on `PyPI <https://pypi.org/>`_:
 
 .. code-block::
 

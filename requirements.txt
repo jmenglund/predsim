@@ -1,5 +1,0 @@
-pytest>=2.8
-codecov
-pytest-cov
-pytest-pep8
-DendroPy>=4.0

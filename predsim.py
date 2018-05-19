@@ -130,9 +130,9 @@ def get_seqgen_params(mrbayes_params):
 
 
 def simulate_matrix(
-        tree, seq_len=1000, state_freqs=None, ti_tv=None,
-        general_rates=None, gamma_shape=None, gamma_cats=None,
-        prop_invar=None, rng_seed=None, seqgen_path='seq-gen'):
+        tree, seq_len=1000, state_freqs=None, ti_tv=None, general_rates=None,
+        gamma_shape=None, gamma_cats=None, prop_invar=None, rng_seed=None,
+        seqgen_path='seq-gen'):
     """
     Simulate a dataset with Seq-Gen.
 
@@ -241,13 +241,12 @@ def simulate_multiple_matrices(
 
 def parse_args(args):
     parser = argparse.ArgumentParser(
-        description=(
-            'A command-line utility that reads posterior '
-            'output of MrBayes and simulates predictive '
-            'datasets with Seq-Gen.'))
+        prog='predsim', description=(
+            'A command-line utility that reads posterior output of MrBayes '
+            'and simulates predictive datasets with Seq-Gen.'))
     parser.add_argument(
         '-V', '--version', action='version',
-        version='predsim ' + __version__)
+        version='%(prog)s ' + __version__)
     parser.add_argument(
         '-l', '--length', type=int, action='store', default=1000,
         metavar='N', dest='length',

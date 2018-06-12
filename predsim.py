@@ -95,7 +95,8 @@ def parse_args(args):
 
 
 def _read_parameter_file(filepath, skip=0, num_records=None):
-    """Read MrBayes p-file into a list of dicts.
+    """
+    Read MrBayes p-file into a list of dicts.
 
     Parameters
     ----------

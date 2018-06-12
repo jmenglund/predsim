@@ -8,10 +8,10 @@ from io import open
 
 setup(
     name='predsim',
-    version='0.2.1',
+    version='0.3.0',
     description=(
-        'Command-line tool for simulating predictive '
-        'datasets from MrBayes\' output.'),
+        'Command-line tool for simulating predictive datasets '
+        'from MrBayes\' output.'),
     long_description=open(
         join(dirname(__file__), 'README.rst'), encoding='utf-8').read(),
     py_modules=['predsim'],
@@ -34,4 +34,4 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords=['simulation', 'Seq-Gen', 'DendroPy'])
+    keywords=['simulation', 'predictive', 'Seq-Gen', 'DendroPy'])

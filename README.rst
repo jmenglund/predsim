@@ -141,8 +141,8 @@ cite the Zenodo DOI of this project:
 
 |DOI-URI|
 
-You can select a citation style from the dropdown menu in the 
-"Cite as" section on the Zenodo page.
+You can select your preferred citation style in the "Cite as" section
+on the Zenodo page.
 
 ``predsim`` relies on other software that also should be cited. Below are 
 suggested citations for Seq-Gen and DendroPy, respectively:

@@ -38,7 +38,7 @@ def main(args=None):
         gamma_cats=parser.gamma_cats, seqgen_path=parser.seqgen_path)
     if parser.commands_file:
         parser.commands_file.write('\n'.join(seqgen_commands))
-    parser.outfile.write(matrices.as_string(schema='nexus'))
+    parser.outfile.write(matrices.as_string(schema='nexus', simple=True))
 
 
 def parse_args(args):

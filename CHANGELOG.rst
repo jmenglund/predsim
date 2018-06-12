@@ -8,6 +8,9 @@ This project adheres to `Semantic Versioning <http://semver.org/>`_.
 v0.2.1 - 2018-05-19
 -------------------
 
+Changed
+~~~~~~~
+
 * Minor updates to the documentation in ``README.rst``.
   
 `View commits <https://github.com/jmenglund/predsim/compare/v0.2.0...v0.2.1>`_

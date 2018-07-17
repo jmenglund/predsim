@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
-v0.3.0 - 2018-06-12
+v0.3.0 - 2018-07-17
 -------------------
 
 Changed
@@ -13,6 +13,8 @@ Changed
 
 * Output data is now written in simple Nexus format, i.e. without a separate
   taxa block.
+* Some refactoring in order to make predsim easier to use as a library (i.e.
+  without its command-line interface).
   
 `View commits <https://github.com/jmenglund/predsim/compare/v0.2.1...v0.3.0>`_
 

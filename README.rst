@@ -1,7 +1,7 @@
 predsim
 =======
 
-|Build-Status| |PyPI-Status| |License| |DOI-URI|
+|Build-Status| |Coverage-Status| |PyPI-Status| |License| |DOI-URI|
 
 **predsim** is a simple command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
@@ -163,6 +163,8 @@ Markus Englund, `orcid.org/0000-0003-1688-7112 <http://orcid.org/0000-0003-1688-
 
 .. |Build-Status| image:: https://travis-ci.org/jmenglund/predsim.svg?branch=master
    :target: https://travis-ci.org/jmenglund/predsim
+.. |Coverage-Status| image:: https://codecov.io/gh/jmenglund/predsim/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/jmenglund/predsim
 .. |PyPI-Status| image:: https://img.shields.io/pypi/v/predsim.svg
    :target: https://pypi.python.org/pypi/predsim
 .. |License| image:: https://img.shields.io/badge/license-MIT-blue.svg

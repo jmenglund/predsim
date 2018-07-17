@@ -16,7 +16,7 @@ import sys
 import dendropy
 
 
-__authors__ = 'Markus Englund'
+__author__ = 'Markus Englund'
 __license__ = 'MIT'
 __version__ = '0.3.0'
 

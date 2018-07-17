@@ -151,6 +151,15 @@ def read_pfile(filepath, skip=0, num_records=None):
     return p_dicts
 
 
+class StoreExpandedPath(argparse.Action):
+    """Invoke shell-like path expansion for user- and relative paths."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values:
+            filepath = os.path.abspath(os.path.expanduser(str(values)))
+            setattr(namespace, self.dest, filepath)
+
+
 def kappa_to_titv(kappa, piA, piC, piG, piT):
     """Calculate transistion/transversion ratio from kappa."""
     tot = piA + piC + piG + piT

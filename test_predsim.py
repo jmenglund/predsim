@@ -8,9 +8,11 @@ import tempfile
 import dendropy
 
 from os import devnull
+from textwrap import dedent
 
 from predsim import (
     _read_parameter_file,
+    read_tfile,
     kappa_to_titv,
     get_seqgen_params,
     simulate_matrix,
@@ -43,6 +45,36 @@ def seqgen_status(path):
 
 seqgen_required = pytest.mark.skipif(
     seqgen_status(SEQGEN_PATH) is False, reason='Seq-Gen is required')
+
+
+class TestReadTreeFile():
+
+    t_file_string = (
+        """
+        #NEXUS
+        [ID: 9409050143]
+        [Param: tree]
+        begin trees;
+            translate
+            1 t1,
+            2 t2,
+            3 t3,
+            4 t4;
+        tree rep.1 = ((1:0.1,2:0.1):0.1,3:0.1,4:0.1);
+        tree rep.2 = ((1:0.1,2:0.1):0.1,3:0.1,4:0.1);
+        end;""")
+
+    def test_read_tree_file(self, tmpdir):
+        f = tmpdir.join('t-file.txt')
+        f.write(self.t_file_string)
+        tree_list = read_tfile(str(f.dirpath('t-file.txt')))
+        assert len(tree_list) == 2
+
+    def test_read_empty_tree_file(self, tmpdir):
+        f = tmpdir.join('empty-t-file.txt')
+        f.write('')
+        with pytest.raises(ValueError):
+            read_pfile(str(f.dirpath('empty-t-file.txt')))
 
 
 class TestReadParameterFile():

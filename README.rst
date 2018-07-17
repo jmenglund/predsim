@@ -92,7 +92,7 @@ Usage
       --commands-file FILE  path to output file with used Seq-Gen commands
 
 
-* It is strongly recommended that you use the ``-commands-file`` option to
+* It is strongly recommended that you use the ``--commands-file`` option to
   check the commands run by Seq-Gen.
 
 * Depending on your Python version, you may need to specify the full path to 

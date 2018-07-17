@@ -11,8 +11,8 @@ from os import devnull
 from textwrap import dedent
 
 from predsim import (
-    _read_parameter_file,
     read_tfile,
+    read_pfile,
     kappa_to_titv,
     get_seqgen_params,
     simulate_matrix,
@@ -88,14 +88,14 @@ class TestReadParameterFile():
     def test_read_parameter_file(self, tmpdir):
         f = tmpdir.join('p-file.txt')
         f.write(self.p_file_string)
-        p_dicts = _read_parameter_file(str(f.dirpath('p-file.txt')))
+        p_dicts = read_pfile(str(f.dirpath('p-file.txt')))
         assert len(p_dicts) == 2
 
     def test_read_empty_parameter_file(self, tmpdir):
         f = tmpdir.join('empty-p-file.txt')
         f.write('')
         with pytest.raises(ValueError):
-            _read_parameter_file(str(f.dirpath('empty-p-file.txt')))
+            read_pfile(str(f.dirpath('empty-p-file.txt')))
 
 
 class TestKappaConversion():

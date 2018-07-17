@@ -54,7 +54,7 @@ can also be installed using git:
     $ python setup.py install
 
 
-You may consider installing ``predsim`` and its required Python packages 
+You may consider installing predsim and its required Python packages 
 within a virtual environment in order to avoid cluttering your system's 
 Python path.
 
@@ -145,7 +145,7 @@ cite the Zenodo DOI of this project:
 You can select your preferred citation style in the "Cite as" section
 on the Zenodo page.
 
-``predsim`` relies on other software that also should be cited. Below are 
+predsim relies on other software that also should be cited. Below are 
 suggested citations for Seq-Gen and DendroPy:
 
 * Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 

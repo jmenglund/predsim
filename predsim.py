@@ -93,6 +93,27 @@ def parse_args(args):
     return parser.parse_args(args)
 
 
+def read_tfile(filepath, skip=0, num_records=None):
+    """
+    Read MrBayes t-file into a dendropy TreeList.
+
+    Parameters
+    ----------
+    filepath : str
+    skip : int
+        Number of records to skip in the beginning of the file.
+    num_records : int
+        Number of records to read after the skipped records.
+
+    Returns
+    -------
+    tree_list : dendropy.TreeList
+    """
+    tree_list = dendropy.TreeList.get_from_path(
+        filepath, 'nexus', tree_offset=skip)[:num_records]
+    return tree_list
+
+
 def read_pfile(filepath, skip=0, num_records=None):
     """
     Read MrBayes p-file into a list of dicts.

@@ -9,6 +9,7 @@ import argparse
 import csv
 import itertools
 import math
+import os
 import shutil
 import sys
 
@@ -158,6 +159,15 @@ class StoreExpandedPath(argparse.Action):
         if values:
             filepath = os.path.abspath(os.path.expanduser(str(values)))
             setattr(namespace, self.dest, filepath)
+
+
+def is_file(filename):
+    """Check if a path is a file."""
+    if not os.path.isfile(filename):
+        msg = '{0} is not a file'.format(filename)
+        raise argparse.ArgumentTypeError(msg)
+    else:
+        return filename
 
 
 def kappa_to_titv(kappa, piA, piC, piG, piT):

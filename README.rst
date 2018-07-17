@@ -9,7 +9,8 @@ Datasets can be simulated under the GTR+G+I substitution model or any nested
 variant available in MrBayes (JC69, HKY85 etc.). The script uses 
 `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for simulating the
 DNA-sequences and builds on the third-party library
-`DendroPy <http://dendropy.org>`_.
+`DendroPy <http://dendropy.org>`_. The code is contained within a single
+module that can also be imported using Python's import mechanism.
 
 The code has been tested with Python 2.7 and 3.6.
 

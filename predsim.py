@@ -82,10 +82,10 @@ def parse_args(args):
         dest='commands_file', metavar='FILE',
         help='path to output file with used Seq-Gen commands')
     parser.add_argument(
-        'pfile', type=argparse.FileType('rU'),
+        'pfile_path', metavar='pfile', type=is_file, action=StoreExpandedPath,
         help='path to a MrBayes p-file')
     parser.add_argument(
-        'tfile', type=argparse.FileType('rU'),
+        'tfile_path', metavar='tfile', type=is_file, action=StoreExpandedPath,
         help='path to a MrBayes t-file')
     parser.add_argument(
         'outfile', nargs='?', type=argparse.FileType('w'),

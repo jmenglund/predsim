@@ -1,14 +1,15 @@
 predsim
 =======
 
-|Build-Status| |PyPI-Status| |License| |DOI-URI|
+|Build-Status| |Coverage-Status| |PyPI-Status| |License| |DOI-URI|
 
-``predsim`` is a simple command-line tool for simulating predictive
+**predsim** is a simple command-line tool for simulating predictive
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
-variant available in MrBayes (JC69, HKY85 etc.). The script uses 
-`Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for simulating the
-DNA-sequences and builds on the third-party library
+variant available in MrBayes (JC69, HKY85 etc.). The code is contained
+within a single module that can also be imported using Python's import
+mechanism. It uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
+for simulating the DNA-sequences and builds on the third-party library
 `DendroPy <http://dendropy.org>`_.
 
 The code has been tested with Python 2.7 and 3.6.
@@ -92,7 +93,7 @@ Usage
       --commands-file FILE  path to output file with used Seq-Gen commands
 
 
-* It is strongly recommended that you use the ``-commands-file`` option to
+* It is strongly recommended that you use the ``--commands-file`` option to
   check the commands run by Seq-Gen.
 
 * Depending on your Python version, you may need to specify the full path to 
@@ -141,11 +142,11 @@ cite the Zenodo DOI of this project:
 
 |DOI-URI|
 
-You can select a citation style from the dropdown menu in the 
-"Cite as" section on the Zenodo page.
+You can select your preferred citation style in the "Cite as" section
+on the Zenodo page.
 
 ``predsim`` relies on other software that also should be cited. Below are 
-suggested citations for Seq-Gen and DendroPy, respectively:
+suggested citations for Seq-Gen and DendroPy:
 
 * Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 
   Carlo simulation of DNA sequence evolution along phylogenetic trees. 
@@ -162,6 +163,8 @@ Markus Englund, `orcid.org/0000-0003-1688-7112 <http://orcid.org/0000-0003-1688-
 
 .. |Build-Status| image:: https://travis-ci.org/jmenglund/predsim.svg?branch=master
    :target: https://travis-ci.org/jmenglund/predsim
+.. |Coverage-Status| image:: https://codecov.io/gh/jmenglund/predsim/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/jmenglund/predsim
 .. |PyPI-Status| image:: https://img.shields.io/pypi/v/predsim.svg
    :target: https://pypi.python.org/pypi/predsim
 .. |License| image:: https://img.shields.io/badge/license-MIT-blue.svg

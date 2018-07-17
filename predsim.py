@@ -9,25 +9,24 @@ import argparse
 import csv
 import itertools
 import math
+import os
 import shutil
 import sys
 
 import dendropy
 
 
-__authors__ = 'Markus Englund'
+__author__ = 'Markus Englund'
 __license__ = 'MIT'
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 
 
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
     parser = parse_args(args)
-    tree_list = dendropy.TreeList.get_from_stream(
-        parser.tfile, 'nexus', tree_offset=parser.skip)[:parser.num_records]
-    p_dicts = _read_parameter_file(
-        parser.pfile.name, parser.skip, parser.num_records)
+    tree_list = read_tfile(parser.pfile_path, parser.skip, parser.num_records)
+    p_dicts = read_pfile(parser.pfile_path, parser.skip, parser.num_records)
     if parser.seeds_file:
         lines = parser.seeds_file.readlines()
         rng_seeds = [line for line in lines if line.strip() != '']
@@ -38,7 +37,7 @@ def main(args=None):
         gamma_cats=parser.gamma_cats, seqgen_path=parser.seqgen_path)
     if parser.commands_file:
         parser.commands_file.write('\n'.join(seqgen_commands))
-    parser.outfile.write(matrices.as_string(schema='nexus'))
+    parser.outfile.write(matrices.as_string(schema='nexus', simple=True))
 
 
 def parse_args(args):
@@ -82,10 +81,10 @@ def parse_args(args):
         dest='commands_file', metavar='FILE',
         help='path to output file with used Seq-Gen commands')
     parser.add_argument(
-        'pfile', type=argparse.FileType('rU'),
+        'pfile_path', metavar='pfile', type=is_file, action=StoreExpandedPath,
         help='path to a MrBayes p-file')
     parser.add_argument(
-        'tfile', type=argparse.FileType('rU'),
+        'tfile_path', metavar='tfile', type=is_file, action=StoreExpandedPath,
         help='path to a MrBayes t-file')
     parser.add_argument(
         'outfile', nargs='?', type=argparse.FileType('w'),
@@ -94,8 +93,30 @@ def parse_args(args):
     return parser.parse_args(args)
 
 
-def _read_parameter_file(filepath, skip=0, num_records=None):
-    """Read MrBayes p-file into a list of dicts.
+def read_tfile(filepath, skip=0, num_records=None):
+    """
+    Read MrBayes t-file into a dendropy TreeList.
+
+    Parameters
+    ----------
+    filepath : str
+    skip : int
+        Number of records to skip in the beginning of the file.
+    num_records : int
+        Number of records to read after the skipped records.
+
+    Returns
+    -------
+    tree_list : dendropy.TreeList
+    """
+    tree_list = dendropy.TreeList.get_from_path(
+        filepath, 'nexus', tree_offset=skip)[:num_records]
+    return tree_list
+
+
+def read_pfile(filepath, skip=0, num_records=None):
+    """
+    Read MrBayes p-file into a list of dicts.
 
     Parameters
     ----------
@@ -128,6 +149,24 @@ def _read_parameter_file(filepath, skip=0, num_records=None):
         with open(filepath) as p_file:
             p_dicts = process_file(p_file, skip=skip, num_records=num_records)
     return p_dicts
+
+
+class StoreExpandedPath(argparse.Action):
+    """Invoke shell-like path expansion for user- and relative paths."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values:
+            filepath = os.path.abspath(os.path.expanduser(str(values)))
+            setattr(namespace, self.dest, filepath)
+
+
+def is_file(filename):
+    """Check if a path is a file."""
+    if not os.path.isfile(filename):
+        msg = '{0} is not a file'.format(filename)
+        raise argparse.ArgumentTypeError(msg)
+    else:
+        return filename
 
 
 def kappa_to_titv(kappa, piA, piC, piG, piT):

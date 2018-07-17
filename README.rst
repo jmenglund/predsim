@@ -145,7 +145,7 @@ You can select your preferred citation style in the "Cite as" section
 on the Zenodo page.
 
 ``predsim`` relies on other software that also should be cited. Below are 
-suggested citations for Seq-Gen and DendroPy, respectively:
+suggested citations for Seq-Gen and DendroPy:
 
 * Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 
   Carlo simulation of DNA sequence evolution along phylogenetic trees. 

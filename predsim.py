@@ -26,8 +26,7 @@ def main(args=None):
     parser = parse_args(args)
     tree_list = dendropy.TreeList.get_from_stream(
         parser.tfile, 'nexus', tree_offset=parser.skip)[:parser.num_records]
-    p_dicts = _read_parameter_file(
-        parser.pfile.name, parser.skip, parser.num_records)
+    p_dicts = read_pfile(parser.pfile.name, parser.skip, parser.num_records)
     if parser.seeds_file:
         lines = parser.seeds_file.readlines()
         rng_seeds = [line for line in lines if line.strip() != '']
@@ -94,7 +93,7 @@ def parse_args(args):
     return parser.parse_args(args)
 
 
-def _read_parameter_file(filepath, skip=0, num_records=None):
+def read_pfile(filepath, skip=0, num_records=None):
     """
     Read MrBayes p-file into a list of dicts.
 

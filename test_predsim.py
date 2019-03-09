@@ -164,6 +164,17 @@ class TestSingleSimulation():
             self.tree, gamma_shape=2, seqgen_path=SEQGEN_PATH)
         assert ' -a2 ' in result.command_line
 
+    def test_gamma_shape_and_cats(self):
+        result = simulate_matrix(
+            self.tree, gamma_shape=2, gamma_cats=5, seqgen_path=SEQGEN_PATH)
+        assert ' -a2 ' in result.command_line
+        assert ' -g5 ' in result.command_line
+
+    def test_gamma_cats(self):
+        with pytest.raises(ValueError):
+            simulate_matrix(
+                self.tree, gamma_cats=5, seqgen_path=SEQGEN_PATH)
+
 
 @seqgen_required
 class TestMultipleSimulations():

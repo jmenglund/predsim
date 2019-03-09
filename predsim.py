@@ -333,6 +333,12 @@ def simulate_matrix(
         s.general_rates = general_rates
     elif ti_tv:
         s.ti_tv = ti_tv
+    if gamma_shape:
+        s.gamma_shape = gamma_shape
+        s.gamma_cats = gamma_cats
+    elif gamma_cats:
+        raise ValueError(
+            'If "gamma_cats" is not None, "gamma_shape" cannot be None')
     s.gamma_shape = gamma_shape
     s.gamma_cats = gamma_cats
     s.prop_invar = prop_invar

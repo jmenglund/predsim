@@ -52,18 +52,16 @@ def parse_args(args):
         '-V', '--version', action='version',
         version='%(prog)s ' + __version__)
     parser.add_argument(
-        '-l', '--length', type=int, action='store', default=1000,
-        metavar='N', dest='length',
-        help='sequence lenght (default: 1000)')
+        '-l', '--length', action='store', default=1000, type=int,
+        help='sequence lenght (default: 1000)', metavar='N', dest='length')
     parser.add_argument(
-        '-g', '--gamma-cats', type=int, action='store', metavar='N',
-        dest='gamma_cats',
-        help='number of gamma rate categories (default: continuous)')
+        '-g', '--gamma-cats', action='store', type=int,
+        help='number of gamma rate categories (default: continuous)',
+        metavar='N', dest='gamma_cats')
     parser.add_argument(
-        '-s', '--skip', type=int, action='store', metavar='N',
-        dest='skip', default=0, help=(
+        '-s', '--skip', action='store', default=0, type=int, help=(
             'number of records (trees) to skip at the beginning '
-            'of the sample (default: 0)'))
+            'of the sample (default: 0)'), metavar='N', dest='skip')
     parser.add_argument(
         '-n', '--num-records', action='store', default=None, type=int,
         help='number of records (trees) to use in the simulation',
@@ -72,29 +70,25 @@ def parse_args(args):
         '-o', '--output-format', default='nexus', choices=['nexus', 'phylip'],
         help='output format (default: "nexus".)', dest='out_format')
     parser.add_argument(
-        '-p', '--seqgen-path',
-        type=str, default='seq-gen',
-        dest='seqgen_path', metavar='FILE',
-        help='path to a Seq-Gen executable (default: "seq-gen")')
+        '-p', '--seqgen-path', default='seq-gen', type=str,
+        help='path to a Seq-Gen executable (default: "seq-gen")',
+        metavar='FILE', dest='seqgen_path')
     parser.add_argument(
-        '--seeds-file',
-        type=argparse.FileType('rU'),
-        dest='seeds_file', metavar='FILE',
-        help='path to file with seed numbers to pass to Seq-Gen')
+        '--seeds-file', type=argparse.FileType('rU'),
+        help='path to file with seed numbers to pass to Seq-Gen',
+        metavar='FILE', dest='seeds_file')
     parser.add_argument(
-        '--commands-file',
-        type=argparse.FileType('w'),
-        dest='commands_file', metavar='FILE',
-        help='path to output file with used Seq-Gen commands')
+        '--commands-file', type=argparse.FileType('w'),
+        help='path to output file with used Seq-Gen commands',
+        metavar='FILE', dest='commands_file')
     parser.add_argument(
-        'pfile_path', metavar='pfile', type=is_file, action=StoreExpandedPath,
-        help='path to a MrBayes p-file')
+        'pfile_path', action=StoreExpandedPath, type=is_file,
+        help='path to a MrBayes p-file', metavar='pfile')
     parser.add_argument(
-        'tfile_path', metavar='tfile', type=is_file, action=StoreExpandedPath,
-        help='path to a MrBayes t-file')
+        'tfile_path', action=StoreExpandedPath, type=is_file,
+        help='path to a MrBayes t-file', metavar='tfile', )
     parser.add_argument(
-        'outfile', nargs='?', type=argparse.FileType('w'),
-        default=sys.stdout,
+        'outfile', nargs='?', default=sys.stdout, type=argparse.FileType('w'),
         help='path to output file (default: <stdout>)')
     return parser.parse_args(args)
 

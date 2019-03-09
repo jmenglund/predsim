@@ -34,4 +34,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords=['simulation', 'predictive', 'Seq-Gen', 'DendroPy'])
+    keywords=[
+        'simulation', 'predictive', 'Seq-Gen', 'DendroPy', 'MrBayes',
+        'phylogenetics', 'dna-sequences', 'Bayesian'])

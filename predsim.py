@@ -68,7 +68,7 @@ def parse_args(args):
         metavar='N', dest='num_records')
     parser.add_argument(
         '-o', '--output-format', default='nexus', choices=['nexus', 'phylip'],
-        help='output format (default: "nexus".)', dest='out_format')
+        help='output format (default: "nexus")', dest='out_format')
     parser.add_argument(
         '-p', '--seqgen-path', default='seq-gen', type=str,
         help='path to a Seq-Gen executable (default: "seq-gen")',

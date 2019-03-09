@@ -18,7 +18,7 @@ import dendropy
 
 __author__ = 'Markus Englund'
 __license__ = 'MIT'
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 
 def main(args=None):
@@ -130,7 +130,7 @@ def read_pfile(filepath, skip=0, num_records=None):
     -------
     p_dicts : list
     """
-    def process_file(p_file, skip=0, num_records=None):
+    def process_file(p_file, skip=0, stop=None):
         p_file.seek(0)
         try:
             next(p_file)
@@ -144,10 +144,10 @@ def read_pfile(filepath, skip=0, num_records=None):
     stop = skip + num_records if num_records else None
     if (sys.version_info >= (3, 0)):
         with open(filepath, newline='') as p_file:
-            p_dicts = process_file(p_file, skip=skip, num_records=num_records)
+            p_dicts = process_file(p_file, skip=skip, stop=stop)
     else:
         with open(filepath) as p_file:
-            p_dicts = process_file(p_file, skip=skip, num_records=num_records)
+            p_dicts = process_file(p_file, skip=skip, stop=stop)
     return p_dicts
 
 

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
+v0.3.1 - 2019-03-09
+-------------------
+
+Changed
+~~~~~~~
+
+* Small refactoring of the function for reading the p-file.
+* Fixed codecov installation in Travis-CI configuration file.
+  
+`View commits <https://github.com/jmenglund/predsim/compare/v0.3.0...v0.3.1>`_
+
+
 v0.3.0 - 2018-07-18
 -------------------
 

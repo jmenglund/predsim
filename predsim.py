@@ -25,7 +25,7 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
     parser = parse_args(args)
-    tree_list = read_tfile(parser.pfile_path, parser.skip, parser.num_records)
+    tree_list = read_tfile(parser.tfile_path, parser.skip, parser.num_records)
     p_dicts = read_pfile(parser.pfile_path, parser.skip, parser.num_records)
     if parser.seeds_file:
         lines = parser.seeds_file.readlines()

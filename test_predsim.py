@@ -8,7 +8,6 @@ import tempfile
 import dendropy
 
 from os import devnull
-from textwrap import dedent
 
 from predsim import (
     read_tfile,

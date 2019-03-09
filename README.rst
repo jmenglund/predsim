@@ -64,19 +64,19 @@ Usage
 
 .. code-block::
     
-    predsim --help
-    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-p FILE]
-                   [--seeds-file FILE] [--commands-file FILE]
+    $ predsim --help
+    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-o {nexus,phylip}]
+                   [-p FILE] [--seeds-file FILE] [--commands-file FILE]
                    pfile tfile [outfile]
-    
+
     A command-line utility that reads posterior output of MrBayes and simulates
     predictive datasets with Seq-Gen.
-    
+
     positional arguments:
       pfile                 path to a MrBayes p-file
       tfile                 path to a MrBayes t-file
       outfile               path to output file (default: <stdout>)
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -V, --version         show program's version number and exit
@@ -86,17 +86,18 @@ Usage
                             the sample (default: 0)
       -n N, --num-records N
                             number of records (trees) to use in the simulation
+      -o {nexus,phylip}, --output-format {nexus,phylip}
+                            output format (default: "nexus")
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
-      --seeds-file FILE
-                            path to file with seed numbers to pass to Seq-Gen
+      --seeds-file FILE     path to file with seed numbers to pass to Seq-Gen
       --commands-file FILE  path to output file with used Seq-Gen commands
 
 
 * It is strongly recommended that you use the ``--commands-file`` option to
   check the commands run by Seq-Gen.
 
-* Depending on your Python version, you may need to specify the full path to 
+* If you have Python version > 3.4, you may need to specify the full path to 
   your Seq-Gen executable by using the ``-p`` option.
 
 

@@ -18,14 +18,14 @@ import dendropy
 
 __author__ = 'Markus Englund'
 __license__ = 'MIT'
-__version__ = '0.3.1'
+__version__ = '0.4.0'
 
 
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
     parser = parse_args(args)
-    tree_list = read_tfile(parser.pfile_path, parser.skip, parser.num_records)
+    tree_list = read_tfile(parser.tfile_path, parser.skip, parser.num_records)
     p_dicts = read_pfile(parser.pfile_path, parser.skip, parser.num_records)
     if parser.seeds_file:
         lines = parser.seeds_file.readlines()
@@ -37,7 +37,10 @@ def main(args=None):
         gamma_cats=parser.gamma_cats, seqgen_path=parser.seqgen_path)
     if parser.commands_file:
         parser.commands_file.write('\n'.join(seqgen_commands))
-    parser.outfile.write(matrices.as_string(schema='nexus', simple=True))
+    if parser.out_format == 'phylip':
+        parser.outfile.write(matrices.as_string(schema='phylip'))
+    else:
+        parser.outfile.write(matrices.as_string(schema='nexus', simple=True))
 
 
 def parse_args(args):
@@ -49,46 +52,43 @@ def parse_args(args):
         '-V', '--version', action='version',
         version='%(prog)s ' + __version__)
     parser.add_argument(
-        '-l', '--length', type=int, action='store', default=1000,
-        metavar='N', dest='length',
-        help='sequence lenght (default: 1000)')
+        '-l', '--length', action='store', default=1000, type=int,
+        help='sequence lenght (default: 1000)', metavar='N', dest='length')
     parser.add_argument(
-        '-g', '--gamma-cats', type=int, action='store', metavar='N',
-        dest='gamma_cats',
-        help='number of gamma rate categories (default: continuous)')
+        '-g', '--gamma-cats', action='store', type=int,
+        help='number of gamma rate categories (default: continuous)',
+        metavar='N', dest='gamma_cats')
     parser.add_argument(
-        '-s', '--skip', type=int, action='store', metavar='N',
-        dest='skip', default=0, help=(
+        '-s', '--skip', action='store', default=0, type=int, help=(
             'number of records (trees) to skip at the beginning '
-            'of the sample (default: 0)'))
+            'of the sample (default: 0)'), metavar='N', dest='skip')
     parser.add_argument(
-        '-n', '--num-records', type=int, action='store', metavar='N',
-        dest='num_records', default=None, help=(
-            'number of records (trees) to use in the simulation'))
+        '-n', '--num-records', action='store', default=None, type=int,
+        help='number of records (trees) to use in the simulation',
+        metavar='N', dest='num_records')
     parser.add_argument(
-        '-p', '--seqgen-path',
-        type=str, default='seq-gen',
-        dest='seqgen_path', metavar='FILE',
-        help='path to a Seq-Gen executable (default: "seq-gen")')
+        '-o', '--output-format', default='nexus', choices=['nexus', 'phylip'],
+        help='output format (default: "nexus")', dest='out_format')
     parser.add_argument(
-        '--seeds-file',
-        type=argparse.FileType('rU'),
-        dest='seeds_file', metavar='FILE',
-        help='path to file with seed numbers to pass to Seq-Gen')
+        '-p', '--seqgen-path', default='seq-gen', type=str,
+        help='path to a Seq-Gen executable (default: "seq-gen")',
+        metavar='FILE', dest='seqgen_path')
     parser.add_argument(
-        '--commands-file',
-        type=argparse.FileType('w'),
-        dest='commands_file', metavar='FILE',
-        help='path to output file with used Seq-Gen commands')
+        '--seeds-file', type=argparse.FileType('rU'),
+        help='path to file with seed numbers to pass to Seq-Gen',
+        metavar='FILE', dest='seeds_file')
     parser.add_argument(
-        'pfile_path', metavar='pfile', type=is_file, action=StoreExpandedPath,
-        help='path to a MrBayes p-file')
+        '--commands-file', type=argparse.FileType('w'),
+        help='path to output file with used Seq-Gen commands',
+        metavar='FILE', dest='commands_file')
     parser.add_argument(
-        'tfile_path', metavar='tfile', type=is_file, action=StoreExpandedPath,
-        help='path to a MrBayes t-file')
+        'pfile_path', action=StoreExpandedPath, type=is_file,
+        help='path to a MrBayes p-file', metavar='pfile')
     parser.add_argument(
-        'outfile', nargs='?', type=argparse.FileType('w'),
-        default=sys.stdout,
+        'tfile_path', action=StoreExpandedPath, type=is_file,
+        help='path to a MrBayes t-file', metavar='tfile', )
+    parser.add_argument(
+        'outfile', nargs='?', default=sys.stdout, type=argparse.FileType('w'),
         help='path to output file (default: <stdout>)')
     return parser.parse_args(args)
 
@@ -333,6 +333,12 @@ def simulate_matrix(
         s.general_rates = general_rates
     elif ti_tv:
         s.ti_tv = ti_tv
+    if gamma_shape:
+        s.gamma_shape = gamma_shape
+        s.gamma_cats = gamma_cats
+    elif gamma_cats:
+        raise ValueError(
+            'If "gamma_cats" is not None, "gamma_shape" cannot be None')
     s.gamma_shape = gamma_shape
     s.gamma_cats = gamma_cats
     s.prop_invar = prop_invar

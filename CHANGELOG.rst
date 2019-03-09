@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
+v0.4.0 - 2019-03-09
+-------------------
+
+Added
+~~~~~
+
+* The command-line options ``-o`` and ``--output-format`` now allow 
+  writing output to either the PHYLIP or the NEXUS format. 
+
+
+Changed
+~~~~~~~
+
+* The path to the t-file is now correct when using the command-line interface.
+* If using number of gamma rate categories, gamma shape is now also required.
+
+`View commits <https://github.com/jmenglund/predsim/compare/v0.3.1...v0.4.0>`_
+
+
 v0.3.1 - 2019-03-09
 -------------------
 

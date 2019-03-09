@@ -18,6 +18,7 @@ install:
     - pip install pycodestyle
     - pip install pytest
     - pip install coverage
+    - pip install codecov
    
 script:
     - pycodestyle setup.py test_predsim.py predsim.py 

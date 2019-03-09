@@ -37,7 +37,10 @@ def main(args=None):
         gamma_cats=parser.gamma_cats, seqgen_path=parser.seqgen_path)
     if parser.commands_file:
         parser.commands_file.write('\n'.join(seqgen_commands))
-    parser.outfile.write(matrices.as_string(schema='nexus', simple=True))
+    if parser.out_format == 'phylip':
+        parser.outfile.write(matrices.as_string(schema='phylip'))
+    else:
+        parser.outfile.write(matrices.as_string(schema='nexus', simple=True))
 
 
 def parse_args(args):
@@ -62,9 +65,12 @@ def parse_args(args):
             'number of records (trees) to skip at the beginning '
             'of the sample (default: 0)'))
     parser.add_argument(
-        '-n', '--num-records', type=int, action='store', metavar='N',
-        dest='num_records', default=None, help=(
-            'number of records (trees) to use in the simulation'))
+        '-n', '--num-records', action='store', default=None, type=int,
+        help='number of records (trees) to use in the simulation',
+        metavar='N', dest='num_records')
+    parser.add_argument(
+        '-o', '--output-format', default='nexus', choices=['nexus', 'phylip'],
+        help='output format (default: "nexus".)', dest='out_format')
     parser.add_argument(
         '-p', '--seqgen-path',
         type=str, default='seq-gen',

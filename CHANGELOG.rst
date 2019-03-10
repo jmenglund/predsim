@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
+
+v0.5.0 - Not released yet
+-------------------------
+
+Added
+~~~~~
+
+* A number of new tests in ``test_predsim.py``.
+* A new directory, ``test_files/``, for files used by the test suite.
+
+
+Changed
+~~~~~~~
+
+* Updates to the documentation in ``README.rst``.
+* Refactoring of the processing of multiple records.
+* Modification of how input files are opened and closed.
+
+`View commits <https://github.com/jmenglund/predsim/compare/v0.4.0...v0.5.0>`_
+
+
 v0.4.0 - 2019-03-09
 -------------------
 

@@ -273,6 +273,8 @@ class TestArgumentParser():
 @seqgen_required
 class TestMain():
 
+    outfile = tempfile.NamedTemporaryFile('w')
+
     def test_args_help(self):
         with pytest.raises(SystemExit):
             main(['-h'])
@@ -280,3 +282,28 @@ class TestMain():
     def test_noargs(self):
         with pytest.raises(SystemExit):
             main()
+
+    def test_hky(self):
+        main([
+            '-l', '10',
+            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
+            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])
+
+    def test_hky_commands_file(self):
+        main([
+            '-l', '10', '--commands-file', self.outfile.name,
+            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
+            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])
+
+    def test_hky_seeds_file(self):
+        main([
+            '-l', '10',
+            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds.txt'),
+            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
+            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])
+
+    def test_hky_phylip(self):
+        main([
+            '-l', '10', '-o', 'phylip',
+            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
+            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])

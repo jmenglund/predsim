@@ -32,7 +32,7 @@ def seqgen_status(path):
     Return True if Seq-Gen executable is working,
     otherwise return False.
     """
-    f = open(devnull, 'w')
+    f = open(os.devnull, 'w')
     try:
         subprocess.check_call(
             SEQGEN_PATH, stdout=f, stderr=subprocess.STDOUT)

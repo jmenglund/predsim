@@ -23,6 +23,9 @@ from predsim import (
 
 SEQGEN_PATH = 'seq-gen'
 
+TESTFILES_DIR = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'test_files')
+
 
 def seqgen_status(path):
     """

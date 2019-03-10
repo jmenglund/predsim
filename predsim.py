@@ -28,7 +28,8 @@ def main(args=None):
     tree_list = read_tfile(parser.tfile_path, parser.skip, parser.num_records)
     p_dicts = read_pfile(parser.pfile_path, parser.skip, parser.num_records)
     if parser.seeds_file:
-        lines = parser.seeds_file.readlines()
+        with open(parser.seeds_file, 'r') as seeds_file:
+            lines = seeds_file.readlines()
         rng_seeds = [line for line in lines if line.strip() != '']
     else:
         rng_seeds = None
@@ -74,7 +75,7 @@ def parse_args(args):
         help='path to a Seq-Gen executable (default: "seq-gen")',
         metavar='FILE', dest='seqgen_path')
     parser.add_argument(
-        '--seeds-file', type=argparse.FileType('rU'),
+        '--seeds-file', action=StoreExpandedPath, type=str,
         help='path to file with seed numbers to pass to Seq-Gen',
         metavar='FILE', dest='seeds_file')
     parser.add_argument(

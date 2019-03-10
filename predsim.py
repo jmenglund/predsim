@@ -28,19 +28,33 @@ def main(args=None):
     tree_list = read_tfile(parser.tfile_path, parser.skip, parser.num_records)
     p_dicts = read_pfile(parser.pfile_path, parser.skip, parser.num_records)
     if parser.seeds_file:
-        lines = parser.seeds_file.readlines()
+        with open(parser.seeds_file, 'r') as seeds_file:
+            lines = seeds_file.readlines()
         rng_seeds = [line for line in lines if line.strip() != '']
     else:
         rng_seeds = None
-    matrices, seqgen_commands, trees = simulate_multiple_matrices(
-        tree_list, p_dicts, rng_seeds=rng_seeds, seq_len=parser.length,
-        gamma_cats=parser.gamma_cats, seqgen_path=parser.seqgen_path)
-    if parser.commands_file:
-        parser.commands_file.write('\n'.join(seqgen_commands))
-    if parser.out_format == 'phylip':
-        parser.outfile.write(matrices.as_string(schema='phylip'))
+    simulation_input = combine_simulation_input(tree_list, p_dicts, rng_seeds)
+
+    if parser.out_format == 'nexus':
+        schema_kwargs = {'schema': 'nexus', 'simple': True}
+    elif parser.out_format == 'phylip':
+        schema_kwargs = {'schema': 'phylip'}
+
+    if parser.commands_file is not None:
+        with open(parser.commands_file, 'w') as commands_file:
+            for result in iter_seqgen_results(
+                    simulation_input, seq_len=parser.length,
+                    gamma_cats=parser.gamma_cats,
+                    seqgen_path=parser.seqgen_path):
+                sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
+                commands_file.write(result.command_line + '\n')
     else:
-        parser.outfile.write(matrices.as_string(schema='nexus', simple=True))
+        for result in iter_seqgen_results(
+                simulation_input, seq_len=parser.length,
+                gamma_cats=parser.gamma_cats,
+                seqgen_path=parser.seqgen_path):
+            sys.stdout.write(
+                result.char_matrix.as_string(**schema_kwargs) + '\n')
 
 
 def parse_args(args):
@@ -74,11 +88,11 @@ def parse_args(args):
         help='path to a Seq-Gen executable (default: "seq-gen")',
         metavar='FILE', dest='seqgen_path')
     parser.add_argument(
-        '--seeds-file', type=argparse.FileType('rU'),
+        '--seeds-file', action=StoreExpandedPath, type=str,
         help='path to file with seed numbers to pass to Seq-Gen',
         metavar='FILE', dest='seeds_file')
     parser.add_argument(
-        '--commands-file', type=argparse.FileType('w'),
+        '--commands-file', action=StoreExpandedPath, type=str,
         help='path to output file with used Seq-Gen commands',
         metavar='FILE', dest='commands_file')
     parser.add_argument(
@@ -87,9 +101,7 @@ def parse_args(args):
     parser.add_argument(
         'tfile_path', action=StoreExpandedPath, type=is_file,
         help='path to a MrBayes t-file', metavar='tfile', )
-    parser.add_argument(
-        'outfile', nargs='?', default=sys.stdout, type=argparse.FileType('w'),
-        help='path to output file (default: <stdout>)')
+
     return parser.parse_args(args)
 
 
@@ -234,35 +246,11 @@ def get_seqgen_params(mrbayes_params):
     return seqgen_params
 
 
-def simulate_multiple_matrices(
-        tree_list, p_dicts, rng_seeds=None, seq_len=1000,
-        gamma_cats=None, seqgen_path='seq-gen'):
-    """
-    Simulate multiple predictive datasets with Seq-Gen.
-
-    Parameters
-    ----------
-    tree_list : Dendropy.TreeList
-    p_dicts : list
-        Parameter values from a MrBayes' p-file.
-    rng_seeds : list
-        Random seed numbers passed to Seq-Gen.
-    seq_len : int (default: 1000)
-        Lengt of sequences to simulate.
-    gamma_cats : int (default: None)
-        Number of discrete gamma rate categories
-        (continous by default).
-    seqgen_path : str
-        Path to Seq-Gen executable.
-
-    Returns
-    -------
-    matrices, commands, trees :
-        tuple (dendropy.DataSet, list, dendropy.TreeList)
-        Simulated dataset and used Seq-Gen commands.
-    """
+def combine_simulation_input(tree_list, p_dicts, rng_seeds=None):
+    """Combine input for multiple simulations."""
     assert len(p_dicts) == len(tree_list), (
-        'Number of trees does not match the number of parameter values.')
+        'Number of trees does not match the number of records '
+        'with parameter values.')
     if rng_seeds is not None:
         assert len(p_dicts) == len(rng_seeds), (
             'Number of seed numbers does not match '
@@ -270,21 +258,19 @@ def simulate_multiple_matrices(
     assert len(p_dicts) > 0, 'No records to process!'
     rng_seeds = rng_seeds if rng_seeds else [None] * len(p_dicts)
     zipped = zip(tree_list, p_dicts, rng_seeds)
-    matrices = dendropy.DataSet()
-    seqgen_commands = []
-    trees = []
-    for tree, p_dict, rng_seed in zipped:
+    return zipped
+
+
+def iter_seqgen_results(
+        simulation_input, seq_len=1000, gamma_cats=None,
+        seqgen_path='seq-gen'):
+    """Iterate over multiple simulations."""
+    for tree, p_dict, rng_seed in simulation_input:
         seqgen_params = get_seqgen_params(p_dict)
         result = simulate_matrix(
             tree, seq_len=seq_len, rng_seed=rng_seed,
             seqgen_path=seqgen_path, **seqgen_params)
-        matrix = result.char_matrix
-        command = result.command_line
-        trees.append(tree.as_string('newick'))
-        matrices.add(matrix)
-        seqgen_commands.append(command)
-    matrices.unify_taxon_namespaces()
-    return (matrices, seqgen_commands, trees)
+        yield result
 
 
 def simulate_matrix(

@@ -64,10 +64,9 @@ Usage
 
 .. code-block::
     
-    $ predsim --help
     usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-o {nexus,phylip}]
                    [-p FILE] [--seeds-file FILE] [--commands-file FILE]
-                   pfile tfile [outfile]
+                   pfile tfile
 
     A command-line utility that reads posterior output of MrBayes and simulates
     predictive datasets with Seq-Gen.
@@ -75,7 +74,6 @@ Usage
     positional arguments:
       pfile                 path to a MrBayes p-file
       tfile                 path to a MrBayes t-file
-      outfile               path to output file (default: <stdout>)
 
     optional arguments:
       -h, --help            show this help message and exit

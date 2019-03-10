@@ -7,9 +7,9 @@ predsim
 datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
 variant available in MrBayes (JC69, HKY85 etc.). The code is contained
-within a single module that can also be imported using Python's import
-mechanism. It uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
-for simulating the DNA-sequences and builds on the third-party library
+within a single module that can be imported using Python's import mechanism.
+It uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for simulating
+the DNA-sequences and builds on the third-party library
 `DendroPy <http://dendropy.org>`_.
 
 The code has been tested with Python 2.7 and 3.6.
@@ -26,7 +26,7 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
 Prerequisites
 -------------
 
-* Python (version 2.7 or 3.x)
+* Python 2.7+
 * The Python library `DendroPy <http://dendropy.org>`_ (version 4.0 or higher)
 * The command-line tool `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
 
@@ -97,8 +97,8 @@ Usage
 * It is strongly recommended that you use the ``--commands-file`` option to
   check the commands run by Seq-Gen.
 
-* If you have Python version > 3.4, you may need to specify the full path to 
-  your Seq-Gen executable by using the ``-p`` option.
+* If you use a Python version prior to 3.4, you may need to specify the full
+  path to your Seq-Gen executable with the ``-p`` option.
 
 
 Running the tests

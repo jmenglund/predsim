@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import argparse
+
 import pytest
 import subprocess
 import tempfile
@@ -17,7 +19,8 @@ from predsim import (
     simulate_matrix,
     simulate_multiple_matrices,
     parse_args,
-    main,)
+    main,
+    is_file,)
 
 
 SEQGEN_PATH = 'seq-gen'
@@ -233,6 +236,14 @@ class TestArgumentParser():
                         '-l100', '-s1', '-g4',
                         '--commands-file', commands_file.name,
                         p_file.name, t_file.name])
+
+    def test_is_file(self):
+        with tempfile.NamedTemporaryFile() as tmp:
+            assert is_file(tmp.name) == tmp.name
+
+    def test_is_file_error(self):
+        with pytest.raises(argparse.ArgumentTypeError):
+            is_file('')
 
 
 @seqgen_required

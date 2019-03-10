@@ -12,16 +12,20 @@ v0.5.0 - Not released yet
 Added
 ~~~~~
 
-* A number of new tests in ``test_predsim.py``.
-* A new directory, ``test_files/``, for files used by the test suite.
+* Several tests in ``test_predsim.py``.
+* A directory, ``test_files/``, for files used by the test suite.
 
 
 Changed
 ~~~~~~~
 
-* Updates to the documentation in ``README.rst``.
-* Refactoring of the processing of multiple records.
-* Modification of how input files are opened and closed.
+* By default, simulated data is written to standard output (stdout)
+  and it is no longer possible to name an output file (but output
+  can still be redirected to a file!).
+* Records are processed iteratively, and output written after the
+  processing of an individual record has been finished.
+* Opening and closing input files when using the command-line interface.
+* Documentation in ``README.rst``.
 
 `View commits <https://github.com/jmenglund/predsim/compare/v0.4.0...v0.5.0>`_
 

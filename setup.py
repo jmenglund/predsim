@@ -8,7 +8,7 @@ from io import open
 
 setup(
     name='predsim',
-    version='0.4.0',
+    version='0.5.0',
     description=(
         'Command-line tool for simulating predictive datasets '
         'from MrBayes\' output.'),

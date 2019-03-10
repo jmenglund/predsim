@@ -15,7 +15,8 @@ from predsim import (
     kappa_to_titv,
     get_seqgen_params,
     simulate_matrix,
-    simulate_multiple_matrices,
+    combine_simulation_input,
+    iter_seqgen_results,
     parse_args,
     main,
     is_file,)
@@ -179,8 +180,7 @@ class TestSingleSimulation():
                 self.tree, gamma_cats=5, seqgen_path=SEQGEN_PATH)
 
 
-@seqgen_required
-class TestMultipleSimulations():
+class TestCombineSimulationInput():
 
     treelist_string = '((t1:0,t2:0):0,t3:0,t4:0);((t1:0,t2:0):0,t3:0,t4:0);'
     treelist = dendropy.TreeList.get_from_string(treelist_string, 'newick')
@@ -200,26 +200,49 @@ class TestMultipleSimulations():
 
     rng_seeds = ['123321', '456654']
 
-    def test_multiple_simulations(self):
-        simulate_multiple_matrices(
-            self.treelist, self.p_dicts, self.rng_seeds,
-            seqgen_path=SEQGEN_PATH)
+    def test_input(self):
+        combine_simulation_input(
+            self.treelist, self.p_dicts, self.rng_seeds)
 
     def test_empty_input(self):
         with pytest.raises(AssertionError):
-            simulate_multiple_matrices(
-                dendropy.TreeList(), [], seqgen_path=SEQGEN_PATH)
+            combine_simulation_input(dendropy.TreeList(), [])
 
     def test_parameter_mismatch(self):
         with pytest.raises(AssertionError):
-            simulate_multiple_matrices(
-                self.treelist[:2], self.p_dicts[:1], seqgen_path=SEQGEN_PATH)
+            combine_simulation_input(
+                self.treelist[:2], self.p_dicts[:1])
 
     def test_rng_seeds_mismatch(self):
         with pytest.raises(AssertionError):
-            simulate_multiple_matrices(
-                self.treelist, self.p_dicts, rng_seeds=['123321'],
-                seqgen_path=SEQGEN_PATH)
+            combine_simulation_input(
+                self.treelist, self.p_dicts, rng_seeds=['123321'])
+
+
+@seqgen_required
+class TestIterSeqgenResults():
+
+    treelist_string = '((t1:0,t2:0):0,t3:0,t4:0);((t1:0,t2:0):0,t3:0,t4:0);'
+    treelist = dendropy.TreeList.get_from_string(treelist_string, 'newick')
+    p_dicts = [
+        {
+            'pi(A)': '0.25',
+            'pi(C)': '0.25',
+            'pi(G)': '0.25',
+            'pi(T)': '0.25',
+        }, {
+            'pi(A)': '0.25',
+            'pi(C)': '0.25',
+            'pi(G)': '0.25',
+            'pi(T)': '0.25',
+        }]
+    rng_seeds = ['123321', '456654']
+    simulation_input = zip(treelist, p_dicts, rng_seeds)
+
+    def test_multiple_simulations(self):
+        results = iter_seqgen_results(
+            self.simulation_input, seqgen_path=SEQGEN_PATH)
+        assert len(list(results)) == 2
 
 
 @seqgen_required

@@ -2,14 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-
-import pytest
+import os
 import subprocess
 import tempfile
 
+import pytest
 import dendropy
-
-from os import devnull
 
 from predsim import (
     read_tfile,

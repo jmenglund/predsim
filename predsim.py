@@ -13,6 +13,8 @@ import os
 import shutil
 import sys
 
+from collections import namedtuple
+
 import dendropy
 
 
@@ -329,19 +331,14 @@ def simulate_matrix(
     s.gamma_cats = gamma_cats
     s.prop_invar = prop_invar
     s.rng_seed = rng_seed
-    result = SeqGenResult()
-    result.char_matrix = s.generate(tree).char_matrices[0]
-    result.tree = tree
-    result.command_line = ' '.join(s._compose_arguments())
+    result = SeqGenResult(
+        s.generate(tree).char_matrices[0],
+        ' '.join(s._compose_arguments()), tree)
     return result
 
 
-class SeqGenResult(object):
-
-    def __init__(self):
-        self.char_matrix = None
-        self.command_line = None
-        self.tree = None
+SeqGenResult = namedtuple(
+    'SeqGenResult', ['char_matrix', 'command', 'tree'])
 
 
 if __name__ == '__main__':  # pragma: no cover

@@ -42,20 +42,19 @@ def main(args=None):
     elif parser.out_format == 'phylip':
         schema_kwargs = {'schema': 'phylip'}
 
-    if parser.commands_file is not None:
+    if parser.commands_file is None:
+        for result in iter_seqgen_results(
+                simulation_input, seq_len=parser.length,
+                gamma_cats=parser.gamma_cats, seqgen_path=parser.sg_path):
+            sys.stdout.write(
+                result.char_matrix.as_string(**schema_kwargs))
+    else:
         with open(parser.commands_file, 'w') as commands_file:
             for result in iter_seqgen_results(
                     simulation_input, seq_len=parser.length,
                     gamma_cats=parser.gamma_cats, seqgen_path=parser.sg_path):
                 sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
-                commands_file.write(result.command_line + '\n')
-    else:
-        for result in iter_seqgen_results(
-                simulation_input, seq_len=parser.length,
-                gamma_cats=parser.gamma_cats,
-                seqgen_path=parser.seqgen_path):
-            sys.stdout.write(
-                result.char_matrix.as_string(**schema_kwargs) + '\n')
+                commands_file.write(result.command + '\n')
 
 
 def parse_args(args):

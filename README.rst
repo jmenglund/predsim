@@ -116,7 +116,7 @@ Test coverage can be calculated with `Coverage.py
     $ coverage run -m pytest test_predsim.py
     $ coverage report -m predsim.py
 
-The code follow style conventions in `PEP8
+The code follow style conventions in `PEP 8
 <https://www.python.org/dev/peps/pep-0008/>`_, which can be checked
 with `pycodestyle <http://pycodestyle.pycqa.org>`_:
 

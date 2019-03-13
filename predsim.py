@@ -46,8 +46,7 @@ def main(args=None):
         with open(parser.commands_file, 'w') as commands_file:
             for result in iter_seqgen_results(
                     simulation_input, seq_len=parser.length,
-                    gamma_cats=parser.gamma_cats,
-                    seqgen_path=parser.seqgen_path):
+                    gamma_cats=parser.gamma_cats, seqgen_path=parser.sg_path):
                 sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
                 commands_file.write(result.command_line + '\n')
     else:
@@ -88,7 +87,7 @@ def parse_args(args):
     parser.add_argument(
         '-p', '--seqgen-path', default='seq-gen', type=str,
         help='path to a Seq-Gen executable (default: "seq-gen")',
-        metavar='FILE', dest='seqgen_path')
+        metavar='FILE', dest='sg_path')
     parser.add_argument(
         '--seeds-file', action=StoreExpandedPath, type=str,
         help='path to file with seed numbers to pass to Seq-Gen',

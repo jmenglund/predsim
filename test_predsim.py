@@ -145,17 +145,17 @@ class TestSingleSimulation():
         assert len(result.char_matrix) == 4
         assert result.char_matrix.sequence_size == 1000
         assert result.tree == self.tree
-        assert 'HKY' in result.command_line
+        assert 'HKY' in result.command
 
     def test_gtr(self):
         result = simulate_matrix(
             self.tree, general_rates=self.rates, seqgen_path=SEQGEN_PATH)
-        assert 'GTR' in result.command_line
+        assert 'GTR' in result.command
 
     def test_ti_tv(self):
         result = simulate_matrix(self.tree, ti_tv=1, seqgen_path=SEQGEN_PATH)
-        assert 'HKY' in result.command_line
-        assert ' -t1 ' in result.command_line
+        assert 'HKY' in result.command
+        assert ' -t1 ' in result.command
 
     def test_ti_tv_and_gtr(self):
         with pytest.raises(ValueError):
@@ -166,13 +166,13 @@ class TestSingleSimulation():
     def test_gamma(self):
         result = simulate_matrix(
             self.tree, gamma_shape=2, seqgen_path=SEQGEN_PATH)
-        assert ' -a2 ' in result.command_line
+        assert ' -a2 ' in result.command
 
     def test_gamma_shape_and_cats(self):
         result = simulate_matrix(
             self.tree, gamma_shape=2, gamma_cats=5, seqgen_path=SEQGEN_PATH)
-        assert ' -a2 ' in result.command_line
-        assert ' -g5 ' in result.command_line
+        assert ' -a2 ' in result.command
+        assert ' -g5 ' in result.command
 
     def test_gamma_cats(self):
         with pytest.raises(ValueError):

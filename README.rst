@@ -149,10 +149,12 @@ suggested citations for Seq-Gen and DendroPy:
 
 * Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 
   Carlo simulation of DNA sequence evolution along phylogenetic trees. 
-  Comput. Appl. Biosci. 13:235–238.
+  Comput. Appl. Biosci. 13:235–238. DOI:
+  `10.1093/bioinformatics/13.3.235 <https://doi.org/10.1093/bioinformatics/13.3.235>`_
 
 * Sukumaran J, Holder MT. 2010. DendroPy: a Python library for 
-  phylogenetic computing. Bioinformatics 26:1569–1571.
+  phylogenetic computing. Bioinformatics 26:1569–1571. DOI:
+  `10.1093/bioinformatics/btq228 <https://doi.org/10.1093/bioinformatics/btq228>`_
 
 
 Author

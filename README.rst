@@ -64,8 +64,10 @@ Usage
 
 .. code-block::
     
+    predsim --help
     usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-o {nexus,phylip}]
                    [-p FILE] [--seeds-file FILE] [--commands-file FILE]
+                   [--trees-file FILE]
                    pfile tfile
 
     A command-line utility that reads posterior output of MrBayes and simulates
@@ -89,11 +91,12 @@ Usage
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
       --seeds-file FILE     path to file with seed numbers to pass to Seq-Gen
-      --commands-file FILE  path to output file with used Seq-Gen commands
+      --commands-file FILE  path to output file with commands used by Seq-Gen
+      --trees-file FILE     path to output file with trees used by Seq-Gen
 
 
-* It is strongly recommended that you use the ``--commands-file`` option to
-  check the commands run by Seq-Gen.
+* It is strongly recommended that you use the ``--commands-file`` and the 
+  ``--trees-file`` options to check the input given to Seq-Gen.
 
 * If you use a Python version prior to 3.4, you may need to specify the full
   path to your Seq-Gen executable with the ``-p`` option.
@@ -128,7 +131,7 @@ with `pycodestyle <http://pycodestyle.pycqa.org>`_:
 License
 -------
 
-``predsim`` is distributed under the 
+predsim is distributed under the 
 `MIT license <https://opensource.org/licenses/MIT>`_.
 
 

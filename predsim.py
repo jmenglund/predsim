@@ -8,12 +8,12 @@ Command-line tool for simulating predictive datasets from MrBayes' output.
 import argparse
 import csv
 import itertools
-import math
 import os
 import shutil
 import sys
 
 from collections import namedtuple
+from math import fabs
 
 import dendropy
 
@@ -184,7 +184,7 @@ def is_file(filename):
 def kappa_to_titv(kappa, piA, piC, piG, piT):
     """Calculate transistion/transversion ratio from kappa."""
     tot = piA + piC + piG + piT
-    if math.fabs(tot - 1.0) > 1.e-6:
+    if fabs(tot - 1.0) > 1.e-6:
         piA = piA / tot
         piC = piC / tot
         piG = piG / tot

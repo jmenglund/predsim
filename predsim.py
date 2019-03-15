@@ -54,6 +54,10 @@ def main(args=None):
             commands_fo = cm.enter_context(open(parser.commands_filepath, 'w'))
             write_funcs.append(generate_write_func(commands_fo, 'command'))
 
+        if parser.trees_filepath is not None:
+            trees_fo = cm.enter_context(open(parser.trees_filepath, 'w'))
+            write_funcs.append(generate_write_func(trees_fo, 'tree'))
+
         for result in result_iterator:
             sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
             for write_func in write_funcs:
@@ -98,6 +102,10 @@ def parse_args(args):
         '--commands-file', action=StoreExpandedPath, type=str,
         help='path to output file with commands used by Seq-Gen',
         metavar='FILE', dest='commands_filepath')
+    parser.add_argument(
+        '--trees-file', action=StoreExpandedPath, type=str,
+        help='path to output file with trees used by Seq-Gen',
+        metavar='FILE', dest='trees_filepath')
     parser.add_argument(
         'pfile_path', action=StoreExpandedPath, type=is_file,
         help='path to a MrBayes p-file', metavar='pfile')

@@ -332,5 +332,21 @@ SeqGenResult = namedtuple(
     'SeqGenResult', ['char_matrix', 'command', 'tree'])
 
 
+def generate_write_func(fo, field):
+    """
+    Return a function for writing data to a file object.
+
+    Parameters
+    ----------
+    fo : file object
+    field : named tuple field name
+        Field name in SeqGenResult.
+    """
+    def write_to_file(result):
+        fo.write(getattr(result, field))
+        fo.flush()
+    return write_to_file
+
+
 if __name__ == '__main__':  # pragma: no cover
     main()

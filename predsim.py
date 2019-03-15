@@ -88,13 +88,13 @@ def parse_args(args):
         help='path to a Seq-Gen executable (default: "seq-gen")',
         metavar='FILE', dest='sg_path')
     parser.add_argument(
-        '--seeds-file', action=StoreExpandedPath, type=str,
+        '--seeds-file', action=StoreExpandedPath, type=is_file,
         help='path to file with seed numbers to pass to Seq-Gen',
         metavar='FILE', dest='seeds_file')
     parser.add_argument(
         '--commands-file', action=StoreExpandedPath, type=str,
-        help='path to output file with used Seq-Gen commands',
-        metavar='FILE', dest='commands_file')
+        help='path to output file with commands used by Seq-Gen',
+        metavar='FILE', dest='commands_filepath')
     parser.add_argument(
         'pfile_path', action=StoreExpandedPath, type=is_file,
         help='path to a MrBayes p-file', metavar='pfile')

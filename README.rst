@@ -12,7 +12,7 @@ It uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for simulating
 the DNA-sequences and builds on the third-party library
 `DendroPy <http://dendropy.org>`_.
 
-The code has been tested with Python 2.7 and 3.6.
+The code has been tested with Python 3.3 and 3.7.
 
 Source repository: `<https://github.com/jmenglund/predsim>`_
 
@@ -26,7 +26,7 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
 Prerequisites
 -------------
 
-* Python 2.7+
+* Python 3.3+
 * The Python library `DendroPy <http://dendropy.org>`_ (version 4.0 or higher)
 * The command-line tool `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
 

@@ -33,17 +33,17 @@ def seqgen_status(path):
     Return True if Seq-Gen executable is working,
     otherwise return False.
     """
-    f = open(os.devnull, 'w')
+    fo = open(os.devnull, 'w')
     try:
         subprocess.check_call(
-            SEQGEN_PATH, stdout=f, stderr=subprocess.STDOUT)
+            SEQGEN_PATH, stdout=fo, stderr=subprocess.STDOUT)
         status = True
     except subprocess.CalledProcessError:
         status = False
     except OSError:
         status = False
     finally:
-        f.close()
+        fo.close()
     return status
 
 
@@ -53,53 +53,28 @@ seqgen_required = pytest.mark.skipif(
 
 class TestReadTreeFile():
 
-    t_file_string = (
-        """
-        #NEXUS
-        [ID: 9409050143]
-        [Param: tree]
-        begin trees;
-            translate
-            1 t1,
-            2 t2,
-            3 t3,
-            4 t4;
-        tree rep.1 = ((1:0.1,2:0.1):0.1,3:0.1,4:0.1);
-        tree rep.2 = ((1:0.1,2:0.1):0.1,3:0.1,4:0.1);
-        end;""")
-
-    def test_read_tree_file(self, tmpdir):
-        f = tmpdir.join('t-file.txt')
-        f.write(self.t_file_string)
-        tree_list = read_tfile(str(f.dirpath('t-file.txt')))
-        assert len(tree_list) == 2
+    def test_read_tree_file(self):
+        tree_list = read_tfile(os.path.join(TESTFILES_DIR, 'data_hky.t'))
+        assert len(tree_list) == 10
 
     def test_read_empty_tree_file(self, tmpdir):
-        f = tmpdir.join('empty-t-file.txt')
-        f.write('')
+        fo = tmpdir.join('empty-t-file.txt')
+        fo.write('')
         with pytest.raises(ValueError):
-            read_pfile(str(f.dirpath('empty-t-file.txt')))
+            read_pfile(str(fo.dirpath('empty-t-file.txt')))
 
 
 class TestReadParameterFile():
 
-    p_file_string = (
-        '[ID: 1234567890]\n'
-        'Gen\tLnL\tLnPr\tTL\tkappa\tpi(A)\tpi(C)\tpi(G)\tpi(T)\talpha\n'
-        '0\t-5\t50\t0.5\t1\t0.25\t0.25\t0.25\t0.25\t1\n'
-        '500\t-5\t50\t0.5\t1\t0.25\t0.25\t0.25\t0.25\t1')
-
-    def test_read_parameter_file(self, tmpdir):
-        f = tmpdir.join('p-file.txt')
-        f.write(self.p_file_string)
-        p_dicts = read_pfile(str(f.dirpath('p-file.txt')))
-        assert len(p_dicts) == 2
+    def test_read_parameter_file(self):
+        p_dicts = read_pfile(os.path.join(TESTFILES_DIR, 'data_hky.p'))
+        assert len(p_dicts) == 10
 
     def test_read_empty_parameter_file(self, tmpdir):
-        f = tmpdir.join('empty-p-file.txt')
-        f.write('')
+        fo = tmpdir.join('empty-p-file.txt')
+        fo.write('')
         with pytest.raises(ValueError):
-            read_pfile(str(f.dirpath('empty-p-file.txt')))
+            read_pfile(str(fo.dirpath('empty-p-file.txt')))
 
 
 class TestKappaConversion():
@@ -144,7 +119,7 @@ class TestSingleSimulation():
         result = simulate_matrix(self.tree, seqgen_path=SEQGEN_PATH)
         assert len(result.char_matrix) == 4
         assert result.char_matrix.sequence_size == 1000
-        assert result.tree == self.tree
+        assert result.tree == self.tree.as_string('newick') + '\n'
         assert 'HKY' in result.command
 
     def test_gtr(self):
@@ -257,9 +232,8 @@ class TestArgumentParser():
             with tempfile.NamedTemporaryFile() as t_file:
                 with tempfile.NamedTemporaryFile() as commands_file:
                     parse_args([
-                        '-l100', '-s1', '-g4',
-                        '--commands-file', commands_file.name,
-                        p_file.name, t_file.name])
+                        '-l100', '-s1', '-g4', '--commands-file',
+                        commands_file.name, p_file.name, t_file.name])
 
     def test_is_file(self):
         with tempfile.NamedTemporaryFile() as tmp:
@@ -286,24 +260,30 @@ class TestMain():
     def test_hky(self):
         main([
             '-l', '10',
-            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
-            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])
+            os.path.join(TESTFILES_DIR, 'data_hky.p'),
+            os.path.join(TESTFILES_DIR, 'data_hky.t')])
 
     def test_hky_commands_file(self):
         main([
             '-l', '10', '--commands-file', self.outfile.name,
-            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
-            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])
+            os.path.join(TESTFILES_DIR, 'data_hky.p'),
+            os.path.join(TESTFILES_DIR, 'data_hky.t')])
+
+    def test_hky_trees_file(self):
+        main([
+            '-l', '10', '--trees-file', self.outfile.name,
+            os.path.join(TESTFILES_DIR, 'data_hky.p'),
+            os.path.join(TESTFILES_DIR, 'data_hky.t')])
 
     def test_hky_seeds_file(self):
         main([
             '-l', '10',
             '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds.txt'),
-            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
-            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])
+            os.path.join(TESTFILES_DIR, 'data_hky.p'),
+            os.path.join(TESTFILES_DIR, 'data_hky.t')])
 
     def test_hky_phylip(self):
         main([
             '-l', '10', '-o', 'phylip',
-            os.path.join(TESTFILES_DIR, 'anolis_hky.p'),
-            os.path.join(TESTFILES_DIR, 'anolis_hky.t')])
+            os.path.join(TESTFILES_DIR, 'data_hky.p'),
+            os.path.join(TESTFILES_DIR, 'data_hky.t')])

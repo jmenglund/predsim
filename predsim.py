@@ -7,12 +7,12 @@ Command-line tool for simulating predictive datasets from MrBayes' output.
 
 import argparse
 import csv
-import itertools
 import os
 import shutil
 import sys
 
 from collections import namedtuple
+from itertools import islice
 from math import fabs
 
 import dendropy
@@ -142,24 +142,20 @@ def read_pfile(filepath, skip=0, num_records=None):
     -------
     p_dicts : list
     """
-    def process_file(p_file, skip=0, stop=None):
-        p_file.seek(0)
+    def process_file(fo, skip=0, stop=None):
+        fo.seek(0)
         try:
-            next(p_file)
+            next(fo)
         except StopIteration:
             raise ValueError('No records to process in p-file.')
-        reader = csv.DictReader(p_file, delimiter='\t')
-        sliced = itertools.islice(reader, skip, stop)
+        reader = csv.DictReader(fo, delimiter='\t')
+        sliced = islice(reader, skip, stop)
         p_dicts = list(sliced)
         return p_dicts
 
     stop = skip + num_records if num_records else None
-    if (sys.version_info >= (3, 0)):
-        with open(filepath, newline='') as p_file:
-            p_dicts = process_file(p_file, skip=skip, stop=stop)
-    else:
-        with open(filepath) as p_file:
-            p_dicts = process_file(p_file, skip=skip, stop=stop)
+    with open(filepath) as fo:
+        p_dicts = process_file(fo, skip=skip, stop=stop)
     return p_dicts
 
 

@@ -12,6 +12,7 @@ import shutil
 import sys
 
 from collections import namedtuple
+from contextlib import ExitStack
 from itertools import islice
 from math import fabs
 
@@ -37,24 +38,26 @@ def main(args=None):
         rng_seeds = None
     simulation_input = combine_simulation_input(tree_list, p_dicts, rng_seeds)
 
+    result_iterator = iter_seqgen_results(
+        simulation_input, seq_len=parser.length, gamma_cats=parser.gamma_cats,
+        seqgen_path=parser.sg_path)
+
     if parser.out_format == 'nexus':
         schema_kwargs = {'schema': 'nexus', 'simple': True}
     elif parser.out_format == 'phylip':
         schema_kwargs = {'schema': 'phylip'}
 
-    if parser.commands_file is None:
-        for result in iter_seqgen_results(
-                simulation_input, seq_len=parser.length,
-                gamma_cats=parser.gamma_cats, seqgen_path=parser.sg_path):
-            sys.stdout.write(
-                result.char_matrix.as_string(**schema_kwargs))
-    else:
-        with open(parser.commands_file, 'w') as commands_file:
-            for result in iter_seqgen_results(
-                    simulation_input, seq_len=parser.length,
-                    gamma_cats=parser.gamma_cats, seqgen_path=parser.sg_path):
-                sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
-                commands_file.write(result.command + '\n')
+    with ExitStack() as cm:  # write to multiple files simultaneously
+        write_funcs = []
+
+        if parser.commands_filepath is not None:
+            commands_fo = cm.enter_context(open(parser.commands_filepath, 'w'))
+            write_funcs.append(generate_write_func(commands_fo, 'command'))
+
+        for result in result_iterator:
+            sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
+            for write_func in write_funcs:
+                write_func(result)
 
 
 def parse_args(args):

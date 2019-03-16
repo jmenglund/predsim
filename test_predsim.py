@@ -279,8 +279,6 @@ class TestMain():
 
     outfile = tempfile.NamedTemporaryFile('w')
 
-    phylip_out = '4 2\nt1  GT\nt2  GT\nt3  CT\nt4  GT\n'
-
     def test_args_help(self):
         with pytest.raises(SystemExit):
             main(['-h'])

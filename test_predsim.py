@@ -28,6 +28,19 @@ TESTFILES_DIR = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'test_files')
 
 
+with open(os.path.join(TESTFILES_DIR, 'expected-hky-3.nex'), 'r') as fo:
+    EXP_NEX_3 = fo.read()
+
+with open(os.path.join(TESTFILES_DIR, 'expected-hky-1.nex'), 'r') as fo:
+    EXP_NEX_1 = fo.read()
+
+with open(os.path.join(TESTFILES_DIR, 'expected-hky-3.phy'), 'r') as fo:
+    EXP_PHY_3 = fo.read()
+
+with open(os.path.join(TESTFILES_DIR, 'expected-hky-1.phy'), 'r') as fo:
+    EXP_PHY_1 = fo.read()
+
+
 def seqgen_status(path):
     """
     Return True if Seq-Gen executable is working,
@@ -54,8 +67,8 @@ seqgen_required = pytest.mark.skipif(
 class TestReadTreeFile():
 
     def test_read_tree_file(self):
-        tree_list = read_tfile(os.path.join(TESTFILES_DIR, 'data_hky.t'))
-        assert len(tree_list) == 10
+        tree_list = read_tfile(os.path.join(TESTFILES_DIR, 'data-hky.t'))
+        assert len(tree_list) == 3
 
     def test_read_empty_tree_file(self, tmpdir):
         fo = tmpdir.join('empty-t-file.txt')
@@ -67,8 +80,8 @@ class TestReadTreeFile():
 class TestReadParameterFile():
 
     def test_read_parameter_file(self):
-        p_dicts = read_pfile(os.path.join(TESTFILES_DIR, 'data_hky.p'))
-        assert len(p_dicts) == 10
+        p_dicts = read_pfile(os.path.join(TESTFILES_DIR, 'data-hky.p'))
+        assert len(p_dicts) == 3
 
     def test_read_empty_parameter_file(self, tmpdir):
         fo = tmpdir.join('empty-p-file.txt')
@@ -249,6 +262,8 @@ class TestMain():
 
     outfile = tempfile.NamedTemporaryFile('w')
 
+    phylip_out = '4 2\nt1  GT\nt2  GT\nt3  CT\nt4  GT\n'
+
     def test_args_help(self):
         with pytest.raises(SystemExit):
             main(['-h'])
@@ -259,31 +274,52 @@ class TestMain():
 
     def test_hky(self):
         main([
-            '-l', '10',
-            os.path.join(TESTFILES_DIR, 'data_hky.p'),
-            os.path.join(TESTFILES_DIR, 'data_hky.t')])
+            '-l', '2',
+            os.path.join(TESTFILES_DIR, 'data-hky.p'),
+            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+
+    def test_hky_seeds_file(self, capsys):
+        main([
+            '-l', '2',
+            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-3.txt'),
+            os.path.join(TESTFILES_DIR, 'data-hky.p'),
+            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+        captured = capsys.readouterr()
+        assert captured.out == EXP_NEX_3
+        assert captured.err == ''
+
+    def test_hky_skip(self, capsys):
+        main([
+            '-l', '2', '-s', '2',
+            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-hky.p'),
+            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+        captured = capsys.readouterr()
+        assert captured.out == EXP_NEX_1
+        assert captured.err == ''
 
     def test_hky_commands_file(self):
         main([
-            '-l', '10', '--commands-file', self.outfile.name,
-            os.path.join(TESTFILES_DIR, 'data_hky.p'),
-            os.path.join(TESTFILES_DIR, 'data_hky.t')])
+            '-l', '2', '-s', '2', '--commands-file', self.outfile.name,
+            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-hky.p'),
+            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+        assert os.path.isfile(self.outfile.name)
 
     def test_hky_trees_file(self):
         main([
-            '-l', '10', '--trees-file', self.outfile.name,
-            os.path.join(TESTFILES_DIR, 'data_hky.p'),
-            os.path.join(TESTFILES_DIR, 'data_hky.t')])
+            '-l', '2', '-s', '2', '--trees-file', self.outfile.name,
+            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-hky.p'),
+            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+        assert os.path.isfile(self.outfile.name)
 
-    def test_hky_seeds_file(self):
+    def test_hky_phylip(self, capsys):
         main([
-            '-l', '10',
-            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds.txt'),
-            os.path.join(TESTFILES_DIR, 'data_hky.p'),
-            os.path.join(TESTFILES_DIR, 'data_hky.t')])
-
-    def test_hky_phylip(self):
-        main([
-            '-l', '10', '-o', 'phylip',
-            os.path.join(TESTFILES_DIR, 'data_hky.p'),
-            os.path.join(TESTFILES_DIR, 'data_hky.t')])
+            '-l', '2', '-s', '2', '-o', 'phylip',
+            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-hky.p'),
+            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+        captured = capsys.readouterr()
+        assert captured.out == EXP_PHY_1
+        assert captured.err == ''

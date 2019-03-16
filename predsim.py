@@ -30,9 +30,9 @@ def main(args=None):
     parser = parse_args(args)
     tree_list = read_tfile(parser.tfile_path, parser.skip, parser.num_records)
     p_dicts = read_pfile(parser.pfile_path, parser.skip, parser.num_records)
-    if parser.seeds_file:
-        with open(parser.seeds_file, 'r') as seeds_file:
-            lines = seeds_file.readlines()
+    if parser.seeds_filepath:
+        with open(parser.seeds_filepath, 'r') as seeds_fo:
+            lines = seeds_fo.readlines()
         rng_seeds = [line for line in lines if line.strip() != '']
     else:
         rng_seeds = None
@@ -40,7 +40,7 @@ def main(args=None):
 
     result_iterator = iter_seqgen_results(
         simulation_input, seq_len=parser.length, gamma_cats=parser.gamma_cats,
-        seqgen_path=parser.sg_path)
+        seqgen_path=parser.sg_filepath)
 
     if parser.out_format == 'nexus':
         schema_kwargs = {'schema': 'nexus', 'simple': True}
@@ -70,8 +70,7 @@ def parse_args(args):
             'A command-line utility that reads posterior output of MrBayes '
             'and simulates predictive datasets with Seq-Gen.'))
     parser.add_argument(
-        '-V', '--version', action='version',
-        version='%(prog)s ' + __version__)
+        '-V', '--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument(
         '-l', '--length', action='store', default=1000, type=int,
         help='sequence lenght (default: 1000)', metavar='N', dest='length')
@@ -93,11 +92,11 @@ def parse_args(args):
     parser.add_argument(
         '-p', '--seqgen-path', default='seq-gen', type=str,
         help='path to a Seq-Gen executable (default: "seq-gen")',
-        metavar='FILE', dest='sg_path')
+        metavar='FILE', dest='sg_filepath')
     parser.add_argument(
         '--seeds-file', action=StoreExpandedPath, type=is_file,
         help='path to file with seed numbers to pass to Seq-Gen',
-        metavar='FILE', dest='seeds_file')
+        metavar='FILE', dest='seeds_filepath')
     parser.add_argument(
         '--commands-file', action=StoreExpandedPath, type=str,
         help='path to output file with commands used by Seq-Gen',

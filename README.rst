@@ -95,8 +95,8 @@ Usage
       --trees-file FILE     path to output file with trees used by Seq-Gen
 
 
-* It is strongly recommended that you use the ``--commands-file`` and the 
-  ``--trees-file`` options to check the input given to Seq-Gen.
+* It is recommended that you use the ``--commands-file`` and the ``--trees-file``
+  options to check the input given to Seq-Gen.
 
 
 Running the tests

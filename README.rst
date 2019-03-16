@@ -12,7 +12,7 @@ It uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for simulating
 the DNA-sequences and builds on the third-party library
 `DendroPy <http://dendropy.org>`_.
 
-The code has been tested with Python 2.7 and 3.6.
+The code has been tested with Python 3.3 and 3.6.
 
 Source repository: `<https://github.com/jmenglund/predsim>`_
 
@@ -26,7 +26,7 @@ Source repository: `<https://github.com/jmenglund/predsim>`_
 Prerequisites
 -------------
 
-* Python 2.7+
+* Python 3.3+
 * The Python library `DendroPy <http://dendropy.org>`_ (version 4.0 or higher)
 * The command-line tool `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_
 
@@ -64,8 +64,10 @@ Usage
 
 .. code-block::
     
+    predsim --help
     usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-o {nexus,phylip}]
                    [-p FILE] [--seeds-file FILE] [--commands-file FILE]
+                   [--trees-file FILE]
                    pfile tfile
 
     A command-line utility that reads posterior output of MrBayes and simulates
@@ -89,14 +91,12 @@ Usage
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
       --seeds-file FILE     path to file with seed numbers to pass to Seq-Gen
-      --commands-file FILE  path to output file with used Seq-Gen commands
+      --commands-file FILE  path to output file with commands used by Seq-Gen
+      --trees-file FILE     path to output file with trees used by Seq-Gen
 
 
-* It is strongly recommended that you use the ``--commands-file`` option to
-  check the commands run by Seq-Gen.
-
-* If you use a Python version prior to 3.4, you may need to specify the full
-  path to your Seq-Gen executable with the ``-p`` option.
+* It is strongly recommended that you use the ``--commands-file`` and the 
+  ``--trees-file`` options to check the input given to Seq-Gen.
 
 
 Running the tests
@@ -116,7 +116,7 @@ Test coverage can be calculated with `Coverage.py
     $ coverage run -m pytest test_predsim.py
     $ coverage report -m predsim.py
 
-The code follow style conventions in `PEP8
+The code follow style conventions in `PEP 8
 <https://www.python.org/dev/peps/pep-0008/>`_, which can be checked
 with `pycodestyle <http://pycodestyle.pycqa.org>`_:
 
@@ -128,7 +128,7 @@ with `pycodestyle <http://pycodestyle.pycqa.org>`_:
 License
 -------
 
-``predsim`` is distributed under the 
+predsim is distributed under the 
 `MIT license <https://opensource.org/licenses/MIT>`_.
 
 
@@ -149,10 +149,12 @@ suggested citations for Seq-Gen and DendroPy:
 
 * Rambaut A, Grassly NC. 1997. Seq-Gen: an application for the Monte 
   Carlo simulation of DNA sequence evolution along phylogenetic trees. 
-  Comput. Appl. Biosci. 13:235–238.
+  Comput. Appl. Biosci. 13:235–238. DOI:
+  `10.1093/bioinformatics/13.3.235 <https://doi.org/10.1093/bioinformatics/13.3.235>`_
 
 * Sukumaran J, Holder MT. 2010. DendroPy: a Python library for 
-  phylogenetic computing. Bioinformatics 26:1569–1571.
+  phylogenetic computing. Bioinformatics 26:1569–1571. DOI:
+  `10.1093/bioinformatics/btq228 <https://doi.org/10.1093/bioinformatics/btq228>`_
 
 
 Author

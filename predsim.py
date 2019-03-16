@@ -7,11 +7,14 @@ Command-line tool for simulating predictive datasets from MrBayes' output.
 
 import argparse
 import csv
-import itertools
-import math
 import os
 import shutil
 import sys
+
+from collections import namedtuple
+from contextlib import ExitStack
+from itertools import islice
+from math import fabs
 
 import dendropy
 
@@ -35,26 +38,30 @@ def main(args=None):
         rng_seeds = None
     simulation_input = combine_simulation_input(tree_list, p_dicts, rng_seeds)
 
+    result_iterator = iter_seqgen_results(
+        simulation_input, seq_len=parser.length, gamma_cats=parser.gamma_cats,
+        seqgen_path=parser.sg_path)
+
     if parser.out_format == 'nexus':
         schema_kwargs = {'schema': 'nexus', 'simple': True}
     elif parser.out_format == 'phylip':
         schema_kwargs = {'schema': 'phylip'}
 
-    if parser.commands_file is not None:
-        with open(parser.commands_file, 'w') as commands_file:
-            for result in iter_seqgen_results(
-                    simulation_input, seq_len=parser.length,
-                    gamma_cats=parser.gamma_cats,
-                    seqgen_path=parser.seqgen_path):
-                sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
-                commands_file.write(result.command_line + '\n')
-    else:
-        for result in iter_seqgen_results(
-                simulation_input, seq_len=parser.length,
-                gamma_cats=parser.gamma_cats,
-                seqgen_path=parser.seqgen_path):
-            sys.stdout.write(
-                result.char_matrix.as_string(**schema_kwargs) + '\n')
+    with ExitStack() as cm:  # write to multiple files simultaneously
+        write_funcs = []
+
+        if parser.commands_filepath is not None:
+            commands_fo = cm.enter_context(open(parser.commands_filepath, 'w'))
+            write_funcs.append(generate_write_func(commands_fo, 'command'))
+
+        if parser.trees_filepath is not None:
+            trees_fo = cm.enter_context(open(parser.trees_filepath, 'w'))
+            write_funcs.append(generate_write_func(trees_fo, 'tree'))
+
+        for result in result_iterator:
+            sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
+            for write_func in write_funcs:
+                write_func(result)
 
 
 def parse_args(args):
@@ -86,15 +93,19 @@ def parse_args(args):
     parser.add_argument(
         '-p', '--seqgen-path', default='seq-gen', type=str,
         help='path to a Seq-Gen executable (default: "seq-gen")',
-        metavar='FILE', dest='seqgen_path')
+        metavar='FILE', dest='sg_path')
     parser.add_argument(
-        '--seeds-file', action=StoreExpandedPath, type=str,
+        '--seeds-file', action=StoreExpandedPath, type=is_file,
         help='path to file with seed numbers to pass to Seq-Gen',
         metavar='FILE', dest='seeds_file')
     parser.add_argument(
         '--commands-file', action=StoreExpandedPath, type=str,
-        help='path to output file with used Seq-Gen commands',
-        metavar='FILE', dest='commands_file')
+        help='path to output file with commands used by Seq-Gen',
+        metavar='FILE', dest='commands_filepath')
+    parser.add_argument(
+        '--trees-file', action=StoreExpandedPath, type=str,
+        help='path to output file with trees used by Seq-Gen',
+        metavar='FILE', dest='trees_filepath')
     parser.add_argument(
         'pfile_path', action=StoreExpandedPath, type=is_file,
         help='path to a MrBayes p-file', metavar='pfile')
@@ -142,24 +153,20 @@ def read_pfile(filepath, skip=0, num_records=None):
     -------
     p_dicts : list
     """
-    def process_file(p_file, skip=0, stop=None):
-        p_file.seek(0)
+    def process_file(fo, skip=0, stop=None):
+        fo.seek(0)
         try:
-            next(p_file)
+            next(fo)
         except StopIteration:
             raise ValueError('No records to process in p-file.')
-        reader = csv.DictReader(p_file, delimiter='\t')
-        sliced = itertools.islice(reader, skip, stop)
+        reader = csv.DictReader(fo, delimiter='\t')
+        sliced = islice(reader, skip, stop)
         p_dicts = list(sliced)
         return p_dicts
 
     stop = skip + num_records if num_records else None
-    if (sys.version_info >= (3, 0)):
-        with open(filepath, newline='') as p_file:
-            p_dicts = process_file(p_file, skip=skip, stop=stop)
-    else:
-        with open(filepath) as p_file:
-            p_dicts = process_file(p_file, skip=skip, stop=stop)
+    with open(filepath) as fo:
+        p_dicts = process_file(fo, skip=skip, stop=stop)
     return p_dicts
 
 
@@ -184,7 +191,7 @@ def is_file(filename):
 def kappa_to_titv(kappa, piA, piC, piG, piT):
     """Calculate transistion/transversion ratio from kappa."""
     tot = piA + piC + piG + piT
-    if math.fabs(tot - 1.0) > 1.e-6:
+    if fabs(tot - 1.0) > 1.e-6:
         piA = piA / tot
         piC = piC / tot
         piG = piG / tot
@@ -307,11 +314,7 @@ def simulate_matrix(
         raise ValueError(
             '"ti_tv" or "general_rates" or both must be set to "None"')
     s = dendropy.interop.seqgen.SeqGen()
-    if (sys.version_info >= (3, 3)):
-        full_path = shutil.which(seqgen_path)
-        s.seqgen_path = full_path if full_path else seqgen_path
-    else:
-        s.seqgen_path = seqgen_path
+    s.seqgen_path = shutil.which(seqgen_path)
     s.char_model = 'GTR' if general_rates else 'HKY'
     s.seq_len = seq_len
     s.state_freqs = state_freqs
@@ -324,24 +327,36 @@ def simulate_matrix(
         s.gamma_cats = gamma_cats
     elif gamma_cats:
         raise ValueError(
-            'If "gamma_cats" is not None, "gamma_shape" cannot be None')
+            'If "gamma_cats" is specified, "gamma_shape" cannot be None')
     s.gamma_shape = gamma_shape
     s.gamma_cats = gamma_cats
     s.prop_invar = prop_invar
     s.rng_seed = rng_seed
-    result = SeqGenResult()
-    result.char_matrix = s.generate(tree).char_matrices[0]
-    result.tree = tree
-    result.command_line = ' '.join(s._compose_arguments())
+    result = SeqGenResult(
+        s.generate(tree).char_matrices[0],
+        ' '.join(s._compose_arguments()),
+        tree.as_string(schema='newick') + '\n')
     return result
 
 
-class SeqGenResult(object):
+SeqGenResult = namedtuple(
+    'SeqGenResult', ['char_matrix', 'command', 'tree'])
 
-    def __init__(self):
-        self.char_matrix = None
-        self.command_line = None
-        self.tree = None
+
+def generate_write_func(fo, field):
+    """
+    Return a function for writing data to a file object.
+
+    Parameters
+    ----------
+    fo : file object
+    field : named tuple field name
+        Field name in SeqGenResult.
+    """
+    def write_to_file(result):
+        fo.write(getattr(result, field))
+        fo.flush()
+    return write_to_file
 
 
 if __name__ == '__main__':  # pragma: no cover

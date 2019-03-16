@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
+v0.6.0 - Not released yet
+-------------------------
+
+Added
+~~~~~
+
+* Ability to write used trees to a file with the ``--trees-file`` option.
+* Content written to output files after completing each simulation.
+* Test files with simpler data.
+
+
+Changed
+~~~~~~~
+
+* Documentation in ``README.rst``.
+* Several tests in ``test_predsim.py``.
+
+
+Removed
+~~~~~~~
+
+* Support for Python versions prior to 3.3.
+* Two test files.
+
+`View commits <https://github.com/jmenglund/predsim/compare/v0.5.0...v0.6.0>`_
+
 
 v0.5.0 - 2019-03-10
 -------------------

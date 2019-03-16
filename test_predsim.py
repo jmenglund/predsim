@@ -41,6 +41,10 @@ with open(os.path.join(TESTFILES_DIR, 'expected-hky-1.phy'), 'r') as fo:
     EXP_PHY_1 = fo.read()
 
 
+def versiontuple(v):
+    return tuple(map(int, (v.split("."))))
+
+
 def seqgen_status(path):
     """
     Return True if Seq-Gen executable is working,
@@ -285,8 +289,9 @@ class TestMain():
             os.path.join(TESTFILES_DIR, 'data-hky.p'),
             os.path.join(TESTFILES_DIR, 'data-hky.t')])
         captured = capsys.readouterr()
-        assert captured.out == EXP_NEX_3
-        assert captured.err == ''
+        if versiontuple(pytest.__version__) >= (3, 3, 0):
+            assert captured.out == EXP_NEX_3
+            assert captured.err == ''
 
     def test_hky_skip(self, capsys):
         main([
@@ -295,8 +300,9 @@ class TestMain():
             os.path.join(TESTFILES_DIR, 'data-hky.p'),
             os.path.join(TESTFILES_DIR, 'data-hky.t')])
         captured = capsys.readouterr()
-        assert captured.out == EXP_NEX_1
-        assert captured.err == ''
+        if versiontuple(pytest.__version__) >= (3, 3, 0):
+            assert captured.out == EXP_NEX_1
+            assert captured.err == ''
 
     def test_hky_commands_file(self):
         main([
@@ -321,5 +327,6 @@ class TestMain():
             os.path.join(TESTFILES_DIR, 'data-hky.p'),
             os.path.join(TESTFILES_DIR, 'data-hky.t')])
         captured = capsys.readouterr()
-        assert captured.out == EXP_PHY_1
-        assert captured.err == ''
+        if versiontuple(pytest.__version__) >= (3, 3, 0):
+            assert captured.out == EXP_PHY_1
+            assert captured.err == ''

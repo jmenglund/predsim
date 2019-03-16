@@ -1,0 +1,42 @@
+#NEXUS
+
+BEGIN DATA;
+    DIMENSIONSNTAX=4 NCHAR=2;
+    FORMAT DATATYPE=DNA GAP=- MISSING=? MATCHCHAR=.;
+    MATRIX
+        t1    GT
+        t2    GT
+        t3    GT
+        t4    GT
+    ;
+END;
+
+
+#NEXUS
+
+BEGIN DATA;
+    DIMENSIONSNTAX=4 NCHAR=2;
+    FORMAT DATATYPE=DNA GAP=- MISSING=? MATCHCHAR=.;
+    MATRIX
+        t1    CC
+        t2    CC
+        t3    CC
+        t4    CC
+    ;
+END;
+
+
+#NEXUS
+
+BEGIN DATA;
+    DIMENSIONSNTAX=4 NCHAR=2;
+    FORMAT DATATYPE=DNA GAP=- MISSING=? MATCHCHAR=.;
+    MATRIX
+        t1    CG
+        t2    CG
+        t3    CG
+        t4    CA
+    ;
+END;
+
+

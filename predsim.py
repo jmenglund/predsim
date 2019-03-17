@@ -87,7 +87,7 @@ def parse_args(args):
         help='number of records (trees) to use in the simulation',
         metavar='N', dest='num_records')
     parser.add_argument(
-        '-f', '--output-format', default='nexus', choices=['nexus', 'phylip'],
+        '-f', '--format', default='nexus', choices=['nexus', 'phylip'],
         help='output format (default: "nexus")', dest='out_format')
     parser.add_argument(
         '-p', '--seqgen-path', default='seq-gen', type=str,

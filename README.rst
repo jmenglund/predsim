@@ -86,7 +86,7 @@ Usage
                             the sample (default: 0)
       -n N, --num-records N
                             number of records (trees) to use in the simulation
-      -f {nexus,phylip}, --output-format {nexus,phylip}
+      -f {nexus,phylip}, --format {nexus,phylip}
                             output format (default: "nexus")
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")

@@ -64,8 +64,8 @@ Usage
 
 .. code-block::
     
-    predsim --help
-    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-o {nexus,phylip}]
+    $ predsim --help
+    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-f {nexus,phylip}]
                    [-p FILE] [--seeds-file FILE] [--commands-file FILE]
                    [--trees-file FILE]
                    pfile tfile
@@ -86,7 +86,7 @@ Usage
                             the sample (default: 0)
       -n N, --num-records N
                             number of records (trees) to use in the simulation
-      -o {nexus,phylip}, --output-format {nexus,phylip}
+      -f {nexus,phylip}, --output-format {nexus,phylip}
                             output format (default: "nexus")
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")

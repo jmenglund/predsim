@@ -248,7 +248,7 @@ class TestArgumentParser():
         seeds_filepath = os.path.join(TESTFILES_DIR, 'seeds-1.txt')
 
         parser = parse_args([
-            '-l', '2', '-s', '1', '-g', '5', '-n', '1', '-o', 'phylip',
+            '-l', '2', '-s', '1', '-g', '5', '-n', '1', '-f', 'phylip',
             '-p', 'sg', '--seeds-file', seeds_filepath,
             '--commands-file', self.commands_fo.name,
             '--trees-file', self.trees_fo.name,
@@ -331,7 +331,7 @@ class TestMain():
 
     def test_hky_phylip(self, capsys):
         main([
-            '-l', '2', '-s', '2', '-o', 'phylip',
+            '-l', '2', '-s', '2', '-f', 'phylip',
             '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
             os.path.join(TESTFILES_DIR, 'data-hky.p'),
             os.path.join(TESTFILES_DIR, 'data-hky.t')])

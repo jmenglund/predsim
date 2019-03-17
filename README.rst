@@ -8,8 +8,8 @@ datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files.
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
 variant available in MrBayes (JC69, HKY85 etc.). The code is contained
 within a single module that can be imported using Python's import mechanism.
-It uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for simulating
-the DNA-sequences and builds on the third-party library
+The tool uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for
+simulating the DNA-sequences and builds on the third-party library
 `DendroPy <http://dendropy.org>`_.
 
 The code has been tested with Python 3.3 and 3.6.

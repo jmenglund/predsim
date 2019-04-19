@@ -52,11 +52,11 @@ def main(args=None):
 
         if parser.commands_filepath is not None:
             commands_fo = cm.enter_context(open(parser.commands_filepath, 'w'))
-            write_funcs.append(generate_write_func(commands_fo, 'command'))
+            write_funcs.append(get_write_func(commands_fo, 'command'))
 
         if parser.trees_filepath is not None:
             trees_fo = cm.enter_context(open(parser.trees_filepath, 'w'))
-            write_funcs.append(generate_write_func(trees_fo, 'tree'))
+            write_funcs.append(get_write_func(trees_fo, 'tree'))
 
         for result in result_iterator:
             sys.stdout.write(result.char_matrix.as_string(**schema_kwargs))
@@ -342,7 +342,7 @@ SeqGenResult = namedtuple(
     'SeqGenResult', ['char_matrix', 'command', 'tree'])
 
 
-def generate_write_func(fo, field):
+def get_write_func(fo, field):
     """
     Return a function for writing data to a file object.
 

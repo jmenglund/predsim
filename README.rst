@@ -8,8 +8,8 @@ datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files.
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
 variant available in MrBayes (JC69, HKY85 etc.). The code is contained
 within a single module that can be imported using Python's import mechanism.
-It uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for simulating
-the DNA-sequences and builds on the third-party library
+The tool uses `Seq-Gen <http://tree.bio.ed.ac.uk/software/seqgen/>`_ for
+simulating the DNA-sequences and builds on the third-party library
 `DendroPy <http://dendropy.org>`_.
 
 The code has been tested with Python 3.3 and 3.6.
@@ -64,8 +64,8 @@ Usage
 
 .. code-block::
     
-    predsim --help
-    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-o {nexus,phylip}]
+    $ predsim --help
+    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-f {nexus,phylip}]
                    [-p FILE] [--seeds-file FILE] [--commands-file FILE]
                    [--trees-file FILE]
                    pfile tfile
@@ -86,7 +86,7 @@ Usage
                             the sample (default: 0)
       -n N, --num-records N
                             number of records (trees) to use in the simulation
-      -o {nexus,phylip}, --output-format {nexus,phylip}
+      -f {nexus,phylip}, --format {nexus,phylip}
                             output format (default: "nexus")
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
@@ -95,8 +95,8 @@ Usage
       --trees-file FILE     path to output file with trees used by Seq-Gen
 
 
-* It is strongly recommended that you use the ``--commands-file`` and the 
-  ``--trees-file`` options to check the input given to Seq-Gen.
+* It is recommended that you use the ``--commands-file`` and the ``--trees-file``
+  options to check the input given to Seq-Gen.
 
 
 Running the tests

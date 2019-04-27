@@ -19,6 +19,8 @@ Added
 Changed
 ~~~~~~~
 
+* Command-line option ``-o`` and ``--output-format`` replaced with ``-f`` and
+  ``--format``, respectively.
 * Documentation in ``README.rst``.
 * Several tests in ``test_predsim.py``.
 

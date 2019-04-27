@@ -41,10 +41,6 @@ with open(os.path.join(TESTFILES_DIR, 'expected-hky-1.phy'), 'r') as fo:
     EXP_PHY_1 = fo.read()
 
 
-def version_tuple(v):
-    return tuple(map(int, (v.split('.'))))
-
-
 def seqgen_status(path):
     """
     Return True if Seq-Gen executable is working,
@@ -237,20 +233,37 @@ class TestIterSeqgenResults():
         assert len(list(results)) == 2
 
 
-@seqgen_required
 class TestArgumentParser():
+
+    commands_fo = tempfile.NamedTemporaryFile('w')
+    trees_fo = tempfile.NamedTemporaryFile('w')
 
     def test_parser_help(self):
         with pytest.raises(SystemExit):
             parse_args(['-h'])
 
     def test_parser(self):
-        with tempfile.NamedTemporaryFile() as p_file:
-            with tempfile.NamedTemporaryFile() as t_file:
-                with tempfile.NamedTemporaryFile() as commands_file:
-                    parse_args([
-                        '-l100', '-s1', '-g4', '--commands-file',
-                        commands_file.name, p_file.name, t_file.name])
+        pfile_path = os.path.join(TESTFILES_DIR, 'data-hky.p')
+        tfile_path = os.path.join(TESTFILES_DIR, 'data-hky.t')
+        seeds_filepath = os.path.join(TESTFILES_DIR, 'seeds-1.txt')
+
+        parser = parse_args([
+            '-l', '2', '-s', '1', '-g', '5', '-n', '1', '-f', 'phylip',
+            '-p', 'sg', '--seeds-file', seeds_filepath,
+            '--commands-file', self.commands_fo.name,
+            '--trees-file', self.trees_fo.name,
+            pfile_path, tfile_path])
+        assert parser.length == 2
+        assert parser.skip == 1
+        assert parser.gamma_cats == 5
+        assert parser.num_records == 1
+        assert parser.out_format == 'phylip'
+        assert parser.sg_filepath == 'sg'
+        assert parser.commands_filepath == self.commands_fo.name
+        assert parser.trees_filepath == self.trees_fo.name
+        assert parser.seeds_filepath == seeds_filepath
+        assert parser.pfile_path == pfile_path
+        assert parser.tfile_path == tfile_path
 
     def test_is_file(self):
         with tempfile.NamedTemporaryFile() as tmp:
@@ -265,8 +278,6 @@ class TestArgumentParser():
 class TestMain():
 
     outfile = tempfile.NamedTemporaryFile('w')
-
-    phylip_out = '4 2\nt1  GT\nt2  GT\nt3  CT\nt4  GT\n'
 
     def test_args_help(self):
         with pytest.raises(SystemExit):
@@ -320,7 +331,7 @@ class TestMain():
 
     def test_hky_phylip(self, capsys):
         main([
-            '-l', '2', '-s', '2', '-o', 'phylip',
+            '-l', '2', '-s', '2', '-f', 'phylip',
             '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
             os.path.join(TESTFILES_DIR, 'data-hky.p'),
             os.path.join(TESTFILES_DIR, 'data-hky.t')])

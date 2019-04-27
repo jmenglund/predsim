@@ -131,7 +131,7 @@ class TestSingleSimulation():
         result = simulate_matrix(self.tree, seqgen_path=SEQGEN_PATH)
         assert len(result.char_matrix) == 4
         assert result.char_matrix.sequence_size == 1000
-        assert result.tree == self.tree.as_string('newick') + '\n'
+        assert result.tree == self.tree.as_string('newick')
         assert 'HKY' in result.command
 
     def test_gtr(self):

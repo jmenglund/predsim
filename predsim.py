@@ -332,8 +332,8 @@ def simulate_matrix(
     s.rng_seed = rng_seed
     result = SeqGenResult(
         s.generate(tree).char_matrices[0],
-        ' '.join(s._compose_arguments()),
-        tree.as_string(schema='newick') + '\n')
+        ' '.join(s._compose_arguments()) + '\n',
+        tree.as_string(schema='newick'))
     return result
 
 

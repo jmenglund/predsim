@@ -257,9 +257,8 @@ def combine_simulation_input(tree_list, p_dicts, rng_seeds=None):
         'Number of trees does not match the number of records '
         'with parameter values.')
     if rng_seeds is not None:
-        assert len(p_dicts) == len(rng_seeds), (
-            'Number of seed numbers does not match '
-            'the number of parameter values.')
+        assert len(p_dicts) <= len(rng_seeds), (
+            'There must be at least ' + str(len(p_dicts)) + ' seed numbers.')
     assert len(p_dicts) > 0, 'No records to process!'
     rng_seeds = rng_seeds if rng_seeds else [None] * len(p_dicts)
     zipped = zip(tree_list, p_dicts, rng_seeds)

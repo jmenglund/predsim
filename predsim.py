@@ -219,9 +219,8 @@ def get_seqgen_params(mrbayes_params):
             str(mrbayes_params['pi(C)']) + ',' +
             str(mrbayes_params['pi(G)']) + ',' +
             str(mrbayes_params['pi(T)']))
-    except KeyError as ex:
-        raise KeyError(
-            'Could not find any base frequences:\n{ex}'.format(ex=str(ex)))
+    except KeyError:
+        seqgen_params['state_freqs'] = '0.25,0.25,0.25,0.25'
     try:
         seqgen_params['ti_tv'] = kappa_to_titv(
             float(mrbayes_params['kappa']),

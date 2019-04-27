@@ -116,8 +116,7 @@ class TestGetSeqGenParamaters():
         assert get_seqgen_params(self.d1) == self.d2
 
     def test_missing_basefreq(self):
-        with pytest.raises(KeyError):
-            get_seqgen_params(self.d3)
+        assert get_seqgen_params(self.d3) == self.d2
 
 
 @seqgen_required

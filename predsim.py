@@ -36,6 +36,7 @@ def main(args=None):
         rng_seeds = [line for line in lines if line.strip() != '']
     else:
         rng_seeds = None
+
     simulation_input = combine_simulation_input(tree_list, p_dicts, rng_seeds)
 
     result_iterator = iter_seqgen_results(
@@ -95,7 +96,7 @@ def parse_args(args):
         metavar='FILE', dest='sg_filepath')
     parser.add_argument(
         '--seeds-file', action=StoreExpandedPath, type=is_file,
-        help='path to file with seed numbers to pass to Seq-Gen',
+        help='path to file with seed numbers (e.g. for debugging purposes)',
         metavar='FILE', dest='seeds_filepath')
     parser.add_argument(
         '--commands-file', action=StoreExpandedPath, type=str,

@@ -44,7 +44,7 @@ def main(args=None):
         seqgen_path=parser.sg_filepath)
 
     if parser.out_format == 'nexus':
-        schema_kwargs = {'schema': 'nexus', 'simple': True}
+        schema_kwargs = {'schema': 'nexus', 'simple': False}
     elif parser.out_format == 'phylip':
         schema_kwargs = {'schema': 'phylip'}
 

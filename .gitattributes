@@ -1,0 +1,4 @@
+*.p linguist-detectable=false
+*.t linguist-detectable=false
+*.nex linguist-detectable=false
+*.phy linguist-detectable=false

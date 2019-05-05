@@ -1,0 +1,24 @@
+#NEXUS
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=4;
+    TAXLABELS
+        t1
+        t2
+        t3
+        t4
+  ;
+END;
+
+BEGIN CHARACTERS;
+    DIMENSIONS NCHAR=2;
+    FORMAT DATATYPE=DNA GAP=- MISSING=? MATCHCHAR=.;
+    MATRIX
+        t1    GT
+        t2    GT
+        t3    GT
+        t4    GT
+    ;
+END;
+
+

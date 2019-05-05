@@ -44,7 +44,7 @@ hosted on `PyPI <https://pypi.org/>`_:
 
     $ pip install predsim
 
-The project is hosted at `<https://github.com/jmenglund/predsim>` and 
+The project is hosted at `<https://github.com/jmenglund/predsim>`_ and 
 can also be installed using git:
 
 .. code-block::

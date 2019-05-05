@@ -40,6 +40,24 @@ with open(os.path.join(TESTFILES_DIR, 'expected-hky-3.phy'), 'r') as fo:
 with open(os.path.join(TESTFILES_DIR, 'expected-hky-1.phy'), 'r') as fo:
     EXP_PHY_1 = fo.read()
 
+with open(os.path.join(TESTFILES_DIR, 'expected-jc-1.nex'), 'r') as fo:
+    EXP_JC_NEX_1 = fo.read()
+
+with open(os.path.join(TESTFILES_DIR, 'expected-jc-gamma-1.nex'), 'r') as fo:
+    EXP_JC_GAMMA_NEX_1 = fo.read()
+
+with open(os.path.join(
+        TESTFILES_DIR, 'expected-jc-propinvar-1.nex'), 'r') as fo:
+    EXP_JC_PROPINVAR_NEX_1 = fo.read()
+
+with open(os.path.join(
+        TESTFILES_DIR, 'expected-jc-invgamma-1.nex'), 'r') as fo:
+    EXP_JC_INVGAMMA_NEX_1 = fo.read()
+
+with open(os.path.join(
+        TESTFILES_DIR, 'expected-gtr-1.nex'), 'r') as fo:
+    EXP_GTR_NEX_1 = fo.read()
+
 
 def seqgen_status(path):
     """
@@ -116,8 +134,7 @@ class TestGetSeqGenParamaters():
         assert get_seqgen_params(self.d1) == self.d2
 
     def test_missing_basefreq(self):
-        with pytest.raises(KeyError):
-            get_seqgen_params(self.d3)
+        assert get_seqgen_params(self.d3) == self.d2
 
 
 @seqgen_required
@@ -132,7 +149,7 @@ class TestSingleSimulation():
         result = simulate_matrix(self.tree, seqgen_path=SEQGEN_PATH)
         assert len(result.char_matrix) == 4
         assert result.char_matrix.sequence_size == 1000
-        assert result.tree == self.tree.as_string('newick') + '\n'
+        assert result.tree == self.tree.as_string('newick')
         assert 'HKY' in result.command
 
     def test_gtr(self):
@@ -337,4 +354,54 @@ class TestMain():
             os.path.join(TESTFILES_DIR, 'data-hky.t')])
         out, err = capsys.readouterr()
         assert out == EXP_PHY_1
+        assert err == ''
+
+    def test_jc(self, capsys):
+        main([
+            '-l', '2', '-n', '1', '--seeds-file',
+            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-jc.p'),
+            os.path.join(TESTFILES_DIR, 'data-jc.t')])
+        out, err = capsys.readouterr()
+        assert out == EXP_JC_NEX_1
+        assert err == ''
+
+    def test_jc_gamma(self, capsys):
+        main([
+            '-l', '2', '-n', '1', '--seeds-file',
+            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-jc-gamma.p'),
+            os.path.join(TESTFILES_DIR, 'data-jc-gamma.t')])
+        out, err = capsys.readouterr()
+        assert out == EXP_JC_GAMMA_NEX_1
+        assert err == ''
+
+    def test_jc_propinvar(self, capsys):
+        main([
+            '-l', '2', '-n', '1', '--seeds-file',
+            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-jc-propinvar.p'),
+            os.path.join(TESTFILES_DIR, 'data-jc-propinvar.t')])
+        out, err = capsys.readouterr()
+        assert out == EXP_JC_PROPINVAR_NEX_1
+        assert err == ''
+
+    def test_jc_invgamma(self, capsys):
+        main([
+            '-l', '2', '-n', '1', '--seeds-file',
+            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-jc-invgamma.p'),
+            os.path.join(TESTFILES_DIR, 'data-jc-invgamma.t')])
+        out, err = capsys.readouterr()
+        assert out == EXP_JC_INVGAMMA_NEX_1
+        assert err == ''
+
+    def test_gtr(self, capsys):
+        main([
+            '-l', '2', '-n', '1', '--seeds-file',
+            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
+            os.path.join(TESTFILES_DIR, 'data-gtr.p'),
+            os.path.join(TESTFILES_DIR, 'data-gtr.t')])
+        out, err = capsys.readouterr()
+        assert out == EXP_GTR_NEX_1
         assert err == ''

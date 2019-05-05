@@ -16,7 +16,7 @@ BEGIN CHARACTERS;
     MATRIX
         t1    GT
         t2    GT
-        t3    CT
+        t3    GT
         t4    GT
     ;
 END;

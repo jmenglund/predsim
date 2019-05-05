@@ -90,7 +90,8 @@ Usage
                             output format (default: "nexus")
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
-      --seeds-file FILE     path to file with seed numbers to pass to Seq-Gen
+      --seeds-file FILE     path to file with seed numbers (e.g. for debugging
+                            purposes)
       --commands-file FILE  path to output file with commands used by Seq-Gen
       --trees-file FILE     path to output file with trees used by Seq-Gen
 

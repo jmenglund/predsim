@@ -5,15 +5,14 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
-v0.6.0 - Not released yet
--------------------------
+v0.6.0 - 2019-05-05
+-------------------
 
 Added
 ~~~~~
 
 * Ability to write used trees to a file with the ``--trees-file`` option.
-* Content written to output files after completing each simulation.
-* Test files with simpler data.
+* Simple test data for various substitution models.
 
 
 Changed
@@ -21,8 +20,11 @@ Changed
 
 * Command-line option ``-o`` and ``--output-format`` replaced with ``-f`` and
   ``--format``, respectively.
-* Documentation in ``README.rst``.
-* Several tests in ``test_predsim.py``.
+* The file with seed numbers may now contain more numbers than being used.
+* Content is written to output after completing each simulation (instead
+  of writing everything to output at the end).
+* NEXUS output is written with separate taxa blocks.
+* Missing state frequences result in equal frequences instead of raising an error.
 
 
 Removed

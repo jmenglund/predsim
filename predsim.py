@@ -21,7 +21,7 @@ import dendropy
 
 __author__ = 'Markus Englund'
 __license__ = 'MIT'
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 
 def main(args=None):
@@ -36,6 +36,7 @@ def main(args=None):
         rng_seeds = [line for line in lines if line.strip() != '']
     else:
         rng_seeds = None
+
     simulation_input = combine_simulation_input(tree_list, p_dicts, rng_seeds)
 
     result_iterator = iter_seqgen_results(
@@ -43,7 +44,7 @@ def main(args=None):
         seqgen_path=parser.sg_filepath)
 
     if parser.out_format == 'nexus':
-        schema_kwargs = {'schema': 'nexus', 'simple': True}
+        schema_kwargs = {'schema': 'nexus', 'simple': False}
     elif parser.out_format == 'phylip':
         schema_kwargs = {'schema': 'phylip'}
 
@@ -95,7 +96,7 @@ def parse_args(args):
         metavar='FILE', dest='sg_filepath')
     parser.add_argument(
         '--seeds-file', action=StoreExpandedPath, type=is_file,
-        help='path to file with seed numbers to pass to Seq-Gen',
+        help='path to file with seed numbers (e.g. for debugging purposes)',
         metavar='FILE', dest='seeds_filepath')
     parser.add_argument(
         '--commands-file', action=StoreExpandedPath, type=str,
@@ -219,9 +220,8 @@ def get_seqgen_params(mrbayes_params):
             str(mrbayes_params['pi(C)']) + ',' +
             str(mrbayes_params['pi(G)']) + ',' +
             str(mrbayes_params['pi(T)']))
-    except KeyError as ex:
-        raise KeyError(
-            'Could not find any base frequences:\n{ex}'.format(ex=str(ex)))
+    except KeyError:
+        seqgen_params['state_freqs'] = '0.25,0.25,0.25,0.25'
     try:
         seqgen_params['ti_tv'] = kappa_to_titv(
             float(mrbayes_params['kappa']),
@@ -258,9 +258,8 @@ def combine_simulation_input(tree_list, p_dicts, rng_seeds=None):
         'Number of trees does not match the number of records '
         'with parameter values.')
     if rng_seeds is not None:
-        assert len(p_dicts) == len(rng_seeds), (
-            'Number of seed numbers does not match '
-            'the number of parameter values.')
+        assert len(p_dicts) <= len(rng_seeds), (
+            'There must be at least ' + str(len(p_dicts)) + ' seed numbers.')
     assert len(p_dicts) > 0, 'No records to process!'
     rng_seeds = rng_seeds if rng_seeds else [None] * len(p_dicts)
     zipped = zip(tree_list, p_dicts, rng_seeds)
@@ -333,8 +332,8 @@ def simulate_matrix(
     s.rng_seed = rng_seed
     result = SeqGenResult(
         s.generate(tree).char_matrices[0],
-        ' '.join(s._compose_arguments()),
-        tree.as_string(schema='newick') + '\n')
+        ' '.join(s._compose_arguments()) + '\n',
+        tree.as_string(schema='newick'))
     return result
 
 

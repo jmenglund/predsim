@@ -14,10 +14,10 @@ BEGIN CHARACTERS;
     DIMENSIONS NCHAR=2;
     FORMAT DATATYPE=DNA GAP=- MISSING=? MATCHCHAR=.;
     MATRIX
-        t1    GT
-        t2    GT
-        t3    CT
-        t4    GT
+        t1    GC
+        t2    GC
+        t3    GC
+        t4    GC
     ;
 END;
 

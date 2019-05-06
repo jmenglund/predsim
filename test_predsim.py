@@ -307,17 +307,11 @@ class TestMain():
         assert out == self.exp_nex_1
         assert err == ''
 
-    def test_hky_commands_file(self):
+    @pytest.mark.parametrize(
+        'outfile_arg', ['--commands-file', '--trees-file'])
+    def test_hky_outfile(self, outfile_arg):
         main([
-            '-l', '2', '-s', '2', '--commands-file', self.outfile.name,
-            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds_1.txt'),
-            os.path.join(TESTFILES_DIR, 'hky.p'),
-            os.path.join(TESTFILES_DIR, 'hky.t')])
-        assert os.path.isfile(self.outfile.name)
-
-    def test_hky_trees_file(self):
-        main([
-            '-l', '2', '-s', '2', '--trees-file', self.outfile.name,
+            '-l', '2', '-s', '2', outfile_arg, self.outfile.name,
             '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds_1.txt'),
             os.path.join(TESTFILES_DIR, 'hky.p'),
             os.path.join(TESTFILES_DIR, 'hky.t')])

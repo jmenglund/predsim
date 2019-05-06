@@ -356,52 +356,27 @@ class TestMain():
         assert out == EXP_PHY_1
         assert err == ''
 
-    def test_jc(self, capsys):
+    @pytest.mark.parametrize(
+        'pfile,tfile,expected',
+        [
+            ('data-jc.p', 'data-jc.t', 'expected-jc-1.nex'),
+            ('data-jc-gamma.p', 'data-jc-gamma.t', 'expected-jc-gamma-1.nex'),
+            (
+                'data-jc-propinvar.p', 'data-jc-propinvar.t',
+                'expected-jc-propinvar-1.nex'),
+            (
+                'data-jc-invgamma.p', 'data-jc-invgamma.t',
+                'expected-jc-invgamma-1.nex'),
+            ('data-gtr.p', 'data-gtr.t', 'expected-gtr-1.nex'),
+        ])
+    def test_subst_model(self, capsys, pfile, tfile, expected):
+        with open(os.path.join(TESTFILES_DIR, expected), 'r') as fo:
+            expected_content = fo.read()
         main([
             '-l', '2', '-n', '1', '--seeds-file',
             os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc.t')])
+            os.path.join(TESTFILES_DIR, pfile),
+            os.path.join(TESTFILES_DIR, tfile)])
         out, err = capsys.readouterr()
-        assert out == EXP_JC_NEX_1
-        assert err == ''
-
-    def test_jc_gamma(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc-gamma.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc-gamma.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_JC_GAMMA_NEX_1
-        assert err == ''
-
-    def test_jc_propinvar(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc-propinvar.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc-propinvar.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_JC_PROPINVAR_NEX_1
-        assert err == ''
-
-    def test_jc_invgamma(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc-invgamma.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc-invgamma.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_JC_INVGAMMA_NEX_1
-        assert err == ''
-
-    def test_gtr(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-gtr.p'),
-            os.path.join(TESTFILES_DIR, 'data-gtr.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_GTR_NEX_1
+        assert out == expected_content
         assert err == ''

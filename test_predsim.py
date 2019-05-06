@@ -24,39 +24,11 @@ from predsim import (
 
 SEQGEN_PATH = 'seq-gen'
 
-TESTFILES_DIR = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'test_files')
 
-
-with open(os.path.join(TESTFILES_DIR, 'expected-hky-3.nex'), 'r') as fo:
-    EXP_NEX_3 = fo.read()
-
-with open(os.path.join(TESTFILES_DIR, 'expected-hky-1.nex'), 'r') as fo:
-    EXP_NEX_1 = fo.read()
-
-with open(os.path.join(TESTFILES_DIR, 'expected-hky-3.phy'), 'r') as fo:
-    EXP_PHY_3 = fo.read()
-
-with open(os.path.join(TESTFILES_DIR, 'expected-hky-1.phy'), 'r') as fo:
-    EXP_PHY_1 = fo.read()
-
-with open(os.path.join(TESTFILES_DIR, 'expected-jc-1.nex'), 'r') as fo:
-    EXP_JC_NEX_1 = fo.read()
-
-with open(os.path.join(TESTFILES_DIR, 'expected-jc-gamma-1.nex'), 'r') as fo:
-    EXP_JC_GAMMA_NEX_1 = fo.read()
-
-with open(os.path.join(
-        TESTFILES_DIR, 'expected-jc-propinvar-1.nex'), 'r') as fo:
-    EXP_JC_PROPINVAR_NEX_1 = fo.read()
-
-with open(os.path.join(
-        TESTFILES_DIR, 'expected-jc-invgamma-1.nex'), 'r') as fo:
-    EXP_JC_INVGAMMA_NEX_1 = fo.read()
-
-with open(os.path.join(
-        TESTFILES_DIR, 'expected-gtr-1.nex'), 'r') as fo:
-    EXP_GTR_NEX_1 = fo.read()
+def get_testfile_path(filename):
+    test_file_dir = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), 'test_files')
+    return os.path.join(test_file_dir, filename)
 
 
 def seqgen_status(path):
@@ -85,7 +57,7 @@ seqgen_required = pytest.mark.skipif(
 class TestReadTreeFile():
 
     def test_read_tree_file(self):
-        tree_list = read_tfile(os.path.join(TESTFILES_DIR, 'data-hky.t'))
+        tree_list = read_tfile(get_testfile_path('hky.t'))
         assert len(tree_list) == 3
 
     def test_read_empty_tree_file(self, tmpdir):
@@ -98,7 +70,7 @@ class TestReadTreeFile():
 class TestReadParameterFile():
 
     def test_read_parameter_file(self):
-        p_dicts = read_pfile(os.path.join(TESTFILES_DIR, 'data-hky.p'))
+        p_dicts = read_pfile(get_testfile_path('hky.p'))
         assert len(p_dicts) == 3
 
     def test_read_empty_parameter_file(self, tmpdir):
@@ -260,9 +232,9 @@ class TestArgumentParser():
             parse_args(['-h'])
 
     def test_parser(self):
-        pfile_path = os.path.join(TESTFILES_DIR, 'data-hky.p')
-        tfile_path = os.path.join(TESTFILES_DIR, 'data-hky.t')
-        seeds_filepath = os.path.join(TESTFILES_DIR, 'seeds-1.txt')
+        pfile_path = get_testfile_path('hky.p')
+        tfile_path = get_testfile_path('hky.t')
+        seeds_filepath = get_testfile_path('seeds_1.txt')
 
         parser = parse_args([
             '-l', '2', '-s', '1', '-g', '5', '-n', '1', '-f', 'phylip',
@@ -294,6 +266,14 @@ class TestArgumentParser():
 @seqgen_required
 class TestMain():
 
+    def read_file(path):
+        with open(path, 'r') as fo:
+            return fo.read()
+
+    exp_nex_1 = read_file(get_testfile_path('exp_hky_1.nex'))
+    exp_nex_3 = read_file(get_testfile_path('exp_hky_3.nex'))
+    exp_phy_1 = read_file(get_testfile_path('exp_hky_1.phy'))
+
     outfile = tempfile.NamedTemporaryFile('w')
 
     def test_args_help(self):
@@ -307,101 +287,64 @@ class TestMain():
     def test_hky(self):
         main([
             '-l', '2',
-            os.path.join(TESTFILES_DIR, 'data-hky.p'),
-            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+            get_testfile_path('hky.p'),
+            get_testfile_path('hky.t')])
 
     def test_hky_seeds_file(self, capsys):
         main([
             '-l', '2',
-            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-3.txt'),
-            os.path.join(TESTFILES_DIR, 'data-hky.p'),
-            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+            '--seeds-file', get_testfile_path('seeds_3.txt'),
+            get_testfile_path('hky.p'),
+            get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == EXP_NEX_3
+        assert out == self.exp_nex_3
         assert err == ''
 
     def test_hky_skip(self, capsys):
         main([
             '-l', '2', '-s', '2',
-            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-hky.p'),
-            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+            '--seeds-file', get_testfile_path('seeds_1.txt'),
+            get_testfile_path('hky.p'),
+            get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == EXP_NEX_1
+        assert out == self.exp_nex_1
         assert err == ''
 
-    def test_hky_commands_file(self):
+    @pytest.mark.parametrize(
+        'outfile_arg', ['--commands-file', '--trees-file'])
+    def test_hky_outfile(self, outfile_arg):
         main([
-            '-l', '2', '-s', '2', '--commands-file', self.outfile.name,
-            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-hky.p'),
-            os.path.join(TESTFILES_DIR, 'data-hky.t')])
-        assert os.path.isfile(self.outfile.name)
-
-    def test_hky_trees_file(self):
-        main([
-            '-l', '2', '-s', '2', '--trees-file', self.outfile.name,
-            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-hky.p'),
-            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+            '-l', '2', '-s', '2', outfile_arg, self.outfile.name,
+            '--seeds-file', get_testfile_path('seeds_1.txt'),
+            get_testfile_path('hky.p'),
+            get_testfile_path('hky.t')])
         assert os.path.isfile(self.outfile.name)
 
     def test_hky_phylip(self, capsys):
         main([
             '-l', '2', '-s', '2', '-f', 'phylip',
-            '--seeds-file', os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-hky.p'),
-            os.path.join(TESTFILES_DIR, 'data-hky.t')])
+            '--seeds-file', get_testfile_path('seeds_1.txt'),
+            get_testfile_path('hky.p'),
+            get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == EXP_PHY_1
+        assert out == self.exp_phy_1
         assert err == ''
 
-    def test_jc(self, capsys):
+    @pytest.mark.parametrize(
+        'pfile,tfile,expected', [
+            ('jc.p', 'jc.t', 'exp_jc_1.nex'),
+            ('jc_gamma.p', 'jc_gamma.t', 'exp_jc_gamma_1.nex'),
+            ('jc_propinvar.p', 'jc_propinvar.t', 'exp_jc_propinvar_1.nex'),
+            ('jc_invgamma.p', 'jc_invgamma.t', 'exp_jc_invgamma_1.nex'),
+            ('gtr.p', 'gtr.t', 'exp_gtr_1.nex')])
+    def test_subst_model(self, capsys, pfile, tfile, expected):
+        with open(get_testfile_path(expected), 'r') as fo:
+            expected_content = fo.read()
         main([
             '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc.t')])
+            get_testfile_path('seeds_1.txt'),
+            get_testfile_path(pfile),
+            get_testfile_path(tfile)])
         out, err = capsys.readouterr()
-        assert out == EXP_JC_NEX_1
-        assert err == ''
-
-    def test_jc_gamma(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc-gamma.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc-gamma.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_JC_GAMMA_NEX_1
-        assert err == ''
-
-    def test_jc_propinvar(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc-propinvar.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc-propinvar.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_JC_PROPINVAR_NEX_1
-        assert err == ''
-
-    def test_jc_invgamma(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-jc-invgamma.p'),
-            os.path.join(TESTFILES_DIR, 'data-jc-invgamma.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_JC_INVGAMMA_NEX_1
-        assert err == ''
-
-    def test_gtr(self, capsys):
-        main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            os.path.join(TESTFILES_DIR, 'seeds-1.txt'),
-            os.path.join(TESTFILES_DIR, 'data-gtr.p'),
-            os.path.join(TESTFILES_DIR, 'data-gtr.t')])
-        out, err = capsys.readouterr()
-        assert out == EXP_GTR_NEX_1
+        assert out == expected_content
         assert err == ''

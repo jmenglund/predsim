@@ -190,10 +190,14 @@ class TestCombineSimulationInput():
             combine_simulation_input(
                 self.treelist[:2], self.p_dicts[:1])
 
+    def test_rng_seeds_mismatch_ok(self):
+        combine_simulation_input(
+            self.treelist[:1], self.p_dicts[:1], rng_seeds=self.rng_seeds)
+
     def test_rng_seeds_mismatch(self):
         with pytest.raises(AssertionError):
             combine_simulation_input(
-                self.treelist, self.p_dicts, rng_seeds=['123321'])
+                self.treelist, self.p_dicts, rng_seeds=self.rng_seeds[:1])
 
 
 @seqgen_required

@@ -32,6 +32,17 @@ def get_testfile_path(filename):
     return os.path.join(test_file_dir, filename)
 
 
+def get_model_testfile_paths(model_string, num_records=1, ext='.nex'):
+    """
+    Return the paths to all test files for a given substitution
+    model and a specified number of records.
+    """
+    paths = [
+        get_testfile_path(model_string + ending) for ending in
+        ['.p', '.t', '_' + str(num_records) + '_exp' + ext]]
+    return paths
+
+
 def seqgen_status(path):
     """
     Return True if Seq-Gen executable is working,
@@ -336,20 +347,20 @@ class TestMain():
         assert err == ''
 
     @pytest.mark.parametrize(
-        'pfile,tfile,expected', [
-            ('jc.p', 'jc.t', 'jc_1_exp.nex'),
-            ('jc_gamma.p', 'jc_gamma.t', 'jc_gamma_1_exp.nex'),
-            ('jc_propinvar.p', 'jc_propinvar.t', 'jc_propinvar_1_exp.nex'),
-            ('jc_invgamma.p', 'jc_invgamma.t', 'jc_invgamma_1_exp.nex'),
-            ('gtr.p', 'gtr.t', 'gtr_1_exp.nex')])
-    def test_subst_model(self, capsys, pfile, tfile, expected):
-        with open(get_testfile_path(expected), 'r') as fo:
-            expected_content = fo.read()
+        'model_string', [
+            'jc',
+            'jc_gamma',
+            'jc_propinvar',
+            'jc_invgamma',
+            'gtr'])
+    def test_subst_model(self, capsys, model_string):
+        pfile_path, tfile_path, expected_path = get_model_testfile_paths(
+            model_string, num_records=1, ext='.nex')
+        with open(expected_path, 'r') as fo:
+            expected_out = fo.read()
         main([
             '-l', '2', '-n', '1', '--seeds-file',
-            get_testfile_path('seeds_1.txt'),
-            get_testfile_path(pfile),
-            get_testfile_path(tfile)])
+            get_testfile_path('seeds_1.txt'), pfile_path, tfile_path])
         out, err = capsys.readouterr()
-        assert out == expected_content
+        assert out == expected_out
         assert err == ''

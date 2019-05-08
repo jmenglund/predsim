@@ -26,6 +26,7 @@ SEQGEN_PATH = 'seq-gen'
 
 
 def get_testfile_path(filename):
+    """Return path to a test file."""
     test_file_dir = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), 'test_files')
     return os.path.join(test_file_dir, filename)

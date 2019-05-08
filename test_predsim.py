@@ -26,9 +26,21 @@ SEQGEN_PATH = 'seq-gen'
 
 
 def get_testfile_path(filename):
+    """Return path to a test file."""
     test_file_dir = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), 'test_files')
     return os.path.join(test_file_dir, filename)
+
+
+def get_model_testfile_paths(model_string, num_records=1, ext='.nex'):
+    """
+    Return the paths to all test files for a given substitution
+    model and a specified number of records.
+    """
+    paths = [
+        get_testfile_path(model_string + ending) for ending in
+        ['.p', '.t', '_' + str(num_records) + '_exp' + ext]]
+    return paths
 
 
 def seqgen_status(path):
@@ -190,10 +202,14 @@ class TestCombineSimulationInput():
             combine_simulation_input(
                 self.treelist[:2], self.p_dicts[:1])
 
+    def test_rng_seeds_mismatch_ok(self):
+        combine_simulation_input(
+            self.treelist[:1], self.p_dicts[:1], rng_seeds=self.rng_seeds)
+
     def test_rng_seeds_mismatch(self):
         with pytest.raises(AssertionError):
             combine_simulation_input(
-                self.treelist, self.p_dicts, rng_seeds=['123321'])
+                self.treelist, self.p_dicts, rng_seeds=self.rng_seeds[:1])
 
 
 @seqgen_required
@@ -270,9 +286,9 @@ class TestMain():
         with open(path, 'r') as fo:
             return fo.read()
 
-    exp_nex_1 = read_file(get_testfile_path('exp_hky_1.nex'))
-    exp_nex_3 = read_file(get_testfile_path('exp_hky_3.nex'))
-    exp_phy_1 = read_file(get_testfile_path('exp_hky_1.phy'))
+    nex_1_exp = read_file(get_testfile_path('hky_1_exp.nex'))
+    nex_3_exp = read_file(get_testfile_path('hky_3_exp.nex'))
+    phy_1_exp = read_file(get_testfile_path('hky_1_exp.phy'))
 
     outfile = tempfile.NamedTemporaryFile('w')
 
@@ -297,7 +313,7 @@ class TestMain():
             get_testfile_path('hky.p'),
             get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == self.exp_nex_3
+        assert out == self.nex_3_exp
         assert err == ''
 
     def test_hky_skip(self, capsys):
@@ -307,7 +323,7 @@ class TestMain():
             get_testfile_path('hky.p'),
             get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == self.exp_nex_1
+        assert out == self.nex_1_exp
         assert err == ''
 
     @pytest.mark.parametrize(
@@ -327,24 +343,24 @@ class TestMain():
             get_testfile_path('hky.p'),
             get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == self.exp_phy_1
+        assert out == self.phy_1_exp
         assert err == ''
 
     @pytest.mark.parametrize(
-        'pfile,tfile,expected', [
-            ('jc.p', 'jc.t', 'exp_jc_1.nex'),
-            ('jc_gamma.p', 'jc_gamma.t', 'exp_jc_gamma_1.nex'),
-            ('jc_propinvar.p', 'jc_propinvar.t', 'exp_jc_propinvar_1.nex'),
-            ('jc_invgamma.p', 'jc_invgamma.t', 'exp_jc_invgamma_1.nex'),
-            ('gtr.p', 'gtr.t', 'exp_gtr_1.nex')])
-    def test_subst_model(self, capsys, pfile, tfile, expected):
-        with open(get_testfile_path(expected), 'r') as fo:
-            expected_content = fo.read()
+        'model_string', [
+            'jc',
+            'jc_gamma',
+            'jc_propinvar',
+            'jc_invgamma',
+            'gtr'])
+    def test_subst_model(self, capsys, model_string):
+        pfile_path, tfile_path, expected_path = get_model_testfile_paths(
+            model_string, num_records=1, ext='.nex')
+        with open(expected_path, 'r') as fo:
+            expected_out = fo.read()
         main([
             '-l', '2', '-n', '1', '--seeds-file',
-            get_testfile_path('seeds_1.txt'),
-            get_testfile_path(pfile),
-            get_testfile_path(tfile)])
+            get_testfile_path('seeds_1.txt'), pfile_path, tfile_path])
         out, err = capsys.readouterr()
-        assert out == expected_content
+        assert out == expected_out
         assert err == ''

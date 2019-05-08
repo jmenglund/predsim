@@ -275,9 +275,9 @@ class TestMain():
         with open(path, 'r') as fo:
             return fo.read()
 
-    exp_nex_1 = read_file(get_testfile_path('exp_hky_1.nex'))
-    exp_nex_3 = read_file(get_testfile_path('exp_hky_3.nex'))
-    exp_phy_1 = read_file(get_testfile_path('exp_hky_1.phy'))
+    nex_1_exp = read_file(get_testfile_path('hky_1_exp.nex'))
+    nex_3_exp = read_file(get_testfile_path('hky_3_exp.nex'))
+    phy_1_exp = read_file(get_testfile_path('hky_1_exp.phy'))
 
     outfile = tempfile.NamedTemporaryFile('w')
 
@@ -302,7 +302,7 @@ class TestMain():
             get_testfile_path('hky.p'),
             get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == self.exp_nex_3
+        assert out == self.nex_3_exp
         assert err == ''
 
     def test_hky_skip(self, capsys):
@@ -312,7 +312,7 @@ class TestMain():
             get_testfile_path('hky.p'),
             get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == self.exp_nex_1
+        assert out == self.nex_1_exp
         assert err == ''
 
     @pytest.mark.parametrize(
@@ -332,16 +332,16 @@ class TestMain():
             get_testfile_path('hky.p'),
             get_testfile_path('hky.t')])
         out, err = capsys.readouterr()
-        assert out == self.exp_phy_1
+        assert out == self.phy_1_exp
         assert err == ''
 
     @pytest.mark.parametrize(
         'pfile,tfile,expected', [
-            ('jc.p', 'jc.t', 'exp_jc_1.nex'),
-            ('jc_gamma.p', 'jc_gamma.t', 'exp_jc_gamma_1.nex'),
-            ('jc_propinvar.p', 'jc_propinvar.t', 'exp_jc_propinvar_1.nex'),
-            ('jc_invgamma.p', 'jc_invgamma.t', 'exp_jc_invgamma_1.nex'),
-            ('gtr.p', 'gtr.t', 'exp_gtr_1.nex')])
+            ('jc.p', 'jc.t', 'jc_1_exp.nex'),
+            ('jc_gamma.p', 'jc_gamma.t', 'jc_gamma_1_exp.nex'),
+            ('jc_propinvar.p', 'jc_propinvar.t', 'jc_propinvar_1_exp.nex'),
+            ('jc_invgamma.p', 'jc_invgamma.t', 'jc_invgamma_1_exp.nex'),
+            ('gtr.p', 'gtr.t', 'gtr_1_exp.nex')])
     def test_subst_model(self, capsys, pfile, tfile, expected):
         with open(get_testfile_path(expected), 'r') as fo:
             expected_content = fo.read()

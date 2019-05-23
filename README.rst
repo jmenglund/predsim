@@ -4,7 +4,7 @@ predsim
 |Build-Status| |Coverage-Status| |PyPI-Status| |License| |DOI-URI|
 
 **predsim** is a simple command-line tool for simulating predictive
-datasets from `MrBayes <http://mrbayes.sourceforge.net>`_ output files. 
+datasets from `MrBayes' <http://mrbayes.sourceforge.net>`_ output files. 
 Datasets can be simulated under the GTR+G+I substitution model or any nested 
 variant available in MrBayes (JC69, HKY85 etc.). The code is contained
 within a single module that can be imported using Python's import mechanism.
@@ -65,9 +65,9 @@ Usage
 .. code-block::
     
     $ predsim --help
-    usage: predsim [-h] [-V] [-l N] [-g N] [-s N] [-n N] [-f {nexus,phylip}]
-                   [-p FILE] [--seeds-file FILE] [--commands-file FILE]
-                   [--trees-file FILE]
+    usage: predsim [-h] [-V] [-l N] [-f #A #C #G #T] [-g N] [-s N] [-n N]
+                   [-o {nexus,phylip}] [-p FILE] [--seeds-file FILE]
+                   [--commands-file FILE] [--trees-file FILE]
                    pfile tfile
 
     A command-line utility that reads posterior output of MrBayes and simulates
@@ -81,12 +81,15 @@ Usage
       -h, --help            show this help message and exit
       -V, --version         show program's version number and exit
       -l N, --length N      sequence lenght (default: 1000)
+      -f #A #C #G #T, --freqs #A #C #G #T
+                            base frequences (overrides any base frequences in
+                            MrBayes' output)
       -g N, --gamma-cats N  number of gamma rate categories (default: continuous)
       -s N, --skip N        number of records (trees) to skip at the beginning of
                             the sample (default: 0)
       -n N, --num-records N
                             number of records (trees) to use in the simulation
-      -f {nexus,phylip}, --format {nexus,phylip}
+      -o {nexus,phylip}, --out-format {nexus,phylip}
                             output format (default: "nexus")
       -p FILE, --seqgen-path FILE
                             path to a Seq-Gen executable (default: "seq-gen")
@@ -95,9 +98,10 @@ Usage
       --commands-file FILE  path to output file with commands used by Seq-Gen
       --trees-file FILE     path to output file with trees used by Seq-Gen
 
-
-* It is recommended that you use the ``--commands-file`` and the ``--trees-file``
-  options to check the input given to Seq-Gen.
+* If base frequences are missing from MrBayes' output, these must be set manually
+  with the ``-f`` (or ``--freqs``) flag.
+* It is recommended that you use the ``--commands-file`` and ``--trees-file`` 
+  flags to check the input given to Seq-Gen.
 
 
 Running the tests

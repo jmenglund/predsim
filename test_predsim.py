@@ -118,7 +118,8 @@ class TestGetSeqGenParamaters():
         assert get_seqgen_params(self.d1) == self.d2
 
     def test_missing_basefreq(self):
-        assert get_seqgen_params(self.d3) == self.d2
+        with pytest.raises(KeyError):
+            get_seqgen_params(self.d3)
 
 
 @seqgen_required
@@ -253,14 +254,17 @@ class TestArgumentParser():
         seeds_filepath = get_testfile_path('seeds_1.txt')
 
         parser = parse_args([
-            '-l', '2', '-s', '1', '-g', '5', '-n', '1', '-f', 'phylip',
-            '-p', 'sg', '--seeds-file', seeds_filepath,
+            '-l', '2', '-s', '1',
+            '-g', '5', '--freqs', '0.25', '0.25', '0.25', '0.25',
+            '-n', '1', '--out-format', 'phylip', '-p', 'sg',
+            '--seeds-file', seeds_filepath,
             '--commands-file', self.commands_fo.name,
             '--trees-file', self.trees_fo.name,
             pfile_path, tfile_path])
         assert parser.length == 2
         assert parser.skip == 1
         assert parser.gamma_cats == 5
+        assert parser.basefreqs == [0.25, 0.25, 0.25, 0.25]
         assert parser.num_records == 1
         assert parser.out_format == 'phylip'
         assert parser.sg_filepath == 'sg'
@@ -338,7 +342,7 @@ class TestMain():
 
     def test_hky_phylip(self, capsys):
         main([
-            '-l', '2', '-s', '2', '-f', 'phylip',
+            '-l', '2', '-s', '2', '--out-format', 'phylip',
             '--seeds-file', get_testfile_path('seeds_1.txt'),
             get_testfile_path('hky.p'),
             get_testfile_path('hky.t')])
@@ -351,16 +355,30 @@ class TestMain():
             'jc',
             'jc_gamma',
             'jc_propinvar',
-            'jc_invgamma',
-            'gtr'])
-    def test_subst_model(self, capsys, model_string):
+            'jc_invgamma'])
+    def test_jc(self, capsys, model_string):
         pfile_path, tfile_path, expected_path = get_model_testfile_paths(
             model_string, num_records=1, ext='.nex')
         with open(expected_path, 'r') as fo:
             expected_out = fo.read()
         main([
-            '-l', '2', '-n', '1', '--seeds-file',
-            get_testfile_path('seeds_1.txt'), pfile_path, tfile_path])
+            '-l', '2', '-n', '1',
+            '--freqs', '0.25', '0.25', '0.25', '0.25',
+            '--seeds-file', get_testfile_path('seeds_1.txt'),
+            pfile_path, tfile_path])
+        out, err = capsys.readouterr()
+        assert out == expected_out
+        assert err == ''
+
+    def test_gtr(self, capsys):
+        pfile_path, tfile_path, expected_path = get_model_testfile_paths(
+            'gtr', num_records=1, ext='.nex')
+        with open(expected_path, 'r') as fo:
+            expected_out = fo.read()
+        main([
+            '-l', '2', '-n', '1',
+            '--seeds-file', get_testfile_path('seeds_1.txt'),
+            pfile_path, tfile_path])
         out, err = capsys.readouterr()
         assert out == expected_out
         assert err == ''

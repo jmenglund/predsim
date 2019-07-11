@@ -21,7 +21,7 @@ import dendropy
 
 __author__ = 'Markus Englund'
 __license__ = 'MIT'
-__version__ = '0.6.0'
+__version__ = '0.7.0'
 
 
 def main(args=None):
@@ -41,7 +41,7 @@ def main(args=None):
 
     result_iterator = iter_seqgen_results(
         simulation_input, seq_len=parser.length, gamma_cats=parser.gamma_cats,
-        seqgen_path=parser.sg_filepath)
+        basefreqs=parser.basefreqs, seqgen_path=parser.sg_filepath)
 
     if parser.out_format == 'nexus':
         schema_kwargs = {'schema': 'nexus', 'simple': False}
@@ -76,6 +76,12 @@ def parse_args(args):
         '-l', '--length', action='store', default=1000, type=int,
         help='sequence lenght (default: 1000)', metavar='N', dest='length')
     parser.add_argument(
+        '-f', '--freqs', action='store', type=float, nargs=4,
+        help=(
+            'base frequences (overrides any base frequences '
+            'in MrBayes\' output)'),
+        metavar=('#A', '#C', '#G', '#T'), dest='basefreqs')
+    parser.add_argument(
         '-g', '--gamma-cats', action='store', type=int,
         help='number of gamma rate categories (default: continuous)',
         metavar='N', dest='gamma_cats')
@@ -88,7 +94,7 @@ def parse_args(args):
         help='number of records (trees) to use in the simulation',
         metavar='N', dest='num_records')
     parser.add_argument(
-        '-f', '--format', default='nexus', choices=['nexus', 'phylip'],
+        '-o', '--out-format', default='nexus', choices=['nexus', 'phylip'],
         help='output format (default: "nexus")', dest='out_format')
     parser.add_argument(
         '-p', '--seqgen-path', default='seq-gen', type=str,
@@ -111,7 +117,7 @@ def parse_args(args):
         help='path to a MrBayes p-file', metavar='pfile')
     parser.add_argument(
         'tfile_path', action=StoreExpandedPath, type=is_file,
-        help='path to a MrBayes t-file', metavar='tfile', )
+        help='path to a MrBayes t-file', metavar='tfile')
 
     return parser.parse_args(args)
 
@@ -200,35 +206,41 @@ def kappa_to_titv(kappa, piA, piC, piG, piT):
     return titv
 
 
-def get_seqgen_params(mrbayes_params):
+def get_seqgen_params(mrbayes_params, basefreqs=None):
     """
     Adapt MrBayes parameter values for use with Seq-Gen.
 
     Paramters
     ---------
-    mrbayes_prams : dict
+    mrbayes_params : dict
         Parameter values from a single row in a MrBayes p-file.
+    basefreqs : list of floats
+        Frequences for the four nucleotides A, C, G, and T to use
+        if missing from MrBayes output.
 
     Returns
     -------
     seqgen_params : dict
     """
-    seqgen_params = {}
-    try:
-        seqgen_params['state_freqs'] = (
-            str(mrbayes_params['pi(A)']) + ',' +
-            str(mrbayes_params['pi(C)']) + ',' +
-            str(mrbayes_params['pi(G)']) + ',' +
-            str(mrbayes_params['pi(T)']))
-    except KeyError:
-        seqgen_params['state_freqs'] = '0.25,0.25,0.25,0.25'
+
+    if basefreqs is None:
+        try:
+            basefreqs = [
+                float(mrbayes_params['pi(A)']),
+                float(mrbayes_params['pi(C)']),
+                float(mrbayes_params['pi(G)']),
+                float(mrbayes_params['pi(T)'])]
+        except KeyError as exc:
+            msg = (
+                'Base frequences must be provided since they '
+                'are not present in MrBayes\' output.')
+            raise KeyError(msg) from exc
+
+    seqgen_params = {'state_freqs': ','.join([str(v) for v in basefreqs])}
+
     try:
         seqgen_params['ti_tv'] = kappa_to_titv(
-            float(mrbayes_params['kappa']),
-            float(mrbayes_params['pi(A)']),
-            float(mrbayes_params['pi(C)']),
-            float(mrbayes_params['pi(G)']),
-            float(mrbayes_params['pi(T)']))
+            float(mrbayes_params['kappa']), *basefreqs)
     except KeyError:
         pass
     try:
@@ -267,11 +279,11 @@ def combine_simulation_input(tree_list, p_dicts, rng_seeds=None):
 
 
 def iter_seqgen_results(
-        simulation_input, seq_len=1000, gamma_cats=None,
+        simulation_input, seq_len=1000, gamma_cats=None, basefreqs=None,
         seqgen_path='seq-gen'):
     """Iterate over multiple simulations."""
     for tree, p_dict, rng_seed in simulation_input:
-        seqgen_params = get_seqgen_params(p_dict)
+        seqgen_params = get_seqgen_params(p_dict, basefreqs=basefreqs)
         result = simulate_matrix(
             tree, seq_len=seq_len, rng_seed=rng_seed,
             seqgen_path=seqgen_path, **seqgen_params)

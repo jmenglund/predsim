@@ -5,20 +5,30 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
 
+v0.7.0 - 2019-07-11
+-------------------
+
+* Added flags ``-f`` and ``--freqs`` to manually set base frequences.
+  As a consequence, the flags ``-o`` and ``--out-format`` have to be
+  used when specifying the output format.
+
+`View commits <https://github.com/jmenglund/predsim/compare/v0.6.0...v0.7.0>`_
+
+
 v0.6.0 - 2019-05-05
 -------------------
 
 Added
 ~~~~~
 
-* Ability to write used trees to a file with the ``--trees-file`` option.
+* Ability to write used trees to a file with the ``--trees-file`` flag.
 * Simple test data for various substitution models.
 
 
 Changed
 ~~~~~~~
 
-* Command-line option ``-o`` and ``--output-format`` replaced with ``-f`` and
+* Command-line flags ``-o`` and ``--output-format`` replaced with ``-f`` and
   ``--format``, respectively.
 * The file with seed numbers may now contain more numbers than being used.
 * Content is written to output after completing each simulation (instead
@@ -66,8 +76,8 @@ v0.4.0 - 2019-03-09
 Added
 ~~~~~
 
-* The command-line options ``-o`` and ``--output-format`` now allow 
-  writing output to either the PHYLIP or the NEXUS format. 
+* The command-line flags ``-o`` and ``--output-format`` now allow 
+  writing output to either Phylip or Nexus format. 
 
 
 Changed
